@@ -13,6 +13,15 @@
   <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
+  <svg style="position:absolute;width:0;height:0">
+    <defs>
+      <filter id="oil-paint">
+        <feTurbulence type="fractalNoise" baseFrequency="0.025" numOctaves="8" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="12" xChannelSelector="R" yChannelSelector="G"/>
+        <feGaussianBlur stdDeviation="0.8"/>
+      </filter>
+    </defs>
+  </svg>
   <nav class="navbar" id="navbar">
     <div class="nav-container">
       <a href="#hero" class="nav-logo">Irshad<span>PC</span></a>
@@ -31,7 +40,7 @@
     <div class="hero-content">
       <p class="hero-greeting fade-up">Hello, I'm</p>
       <h1 class="hero-name fade-up delay-1">Irshad PC</h1>
-      <p class="hero-tagline fade-up delay-2">Software Engineer &amp; Problem Solver</p>
+      <p class="hero-tagline fade-up delay-2">I craft ideas into code &amp; code into craft</p>
       <div class="hero-cta fade-up delay-3">
         <a href="#about" class="btn btn-primary">About Me</a>
       </div>
@@ -68,10 +77,6 @@
             <div class="detail">
               <span class="detail-label">Email</span>
               <span class="detail-value"><a href="mailto:irshadpc@yahoo.in">irshadpc@yahoo.in</a></span>
-            </div>
-            <div class="detail">
-              <span class="detail-label">Freelance</span>
-              <span class="detail-value detail-unavailable">Not Available</span>
             </div>
           </div>
         </div>
