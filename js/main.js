@@ -82,13 +82,13 @@
 
   // ===== TYPEWRITER =====
   var typewriterEl = document.getElementById('typewriter');
-  var text = 'Built from thought. Finished with care.';
-  var charIndex = 0;
+  var twText = 'Built from thought. Finished with care.';
+  var twIndex = 0;
 
   function typeWriter() {
-    if (charIndex < text.length) {
-      typewriterEl.textContent += text.charAt(charIndex);
-      charIndex++;
+    if (twIndex < twText.length) {
+      typewriterEl.textContent += twText.charAt(twIndex);
+      twIndex++;
       setTimeout(typeWriter, 70 + Math.random() * 50);
     }
   }
@@ -104,8 +104,8 @@
       konamiIndex++;
       if (konamiIndex === konamiCode.length) {
         document.body.style.animation = 'glitch 0.3s ease 5';
-        addXP(50);
-        showAchievement('SECRET CODE! +50 XP');
+        discover('konami');
+        showAchievement('SECRET CODE DETECTED!');
         setTimeout(function () {
           document.body.style.animation = '';
         }, 1500);
@@ -116,53 +116,52 @@
     }
   });
 
-  // ===== XP SYSTEM =====
-  var totalXP = 0;
-  var xpLevel = 1;
-  var navXpValue = document.getElementById('navXpValue');
-  var xpBarFill = document.getElementById('xpBarFill');
-  var statLvl = document.getElementById('statLvl');
-  var statLvlNum = document.getElementById('statLvlNum');
-  var statExp = document.getElementById('statExp');
-  var statExpNum = document.getElementById('statExpNum');
+  // ===== DISCOVERY SYSTEM =====
+  var discoveries = {};
+  var discoveryOrder = [];
+  var MAX_DISCOVERIES = 12;
 
-  function xpForLevel(lvl) {
-    return lvl * 100;
+  var navDiscFill = document.getElementById('navDiscFill');
+  var navDiscValue = document.getElementById('navDiscValue');
+  var terminalDiscovery = document.getElementById('terminalDiscovery');
+
+  function discover(name) {
+    if (discoveries[name]) return;
+    discoveries[name] = true;
+    discoveryOrder.push(name);
+    updateDiscoveryBar();
+    checkUnlocks();
   }
 
-  function addXP(amount, sourceEl) {
-    totalXP += amount;
-    var needed = xpForLevel(xpLevel);
-    while (totalXP >= needed) {
-      totalXP -= needed;
-      xpLevel++;
-      needed = xpForLevel(xpLevel);
-      showAchievement('LEVEL UP! LVL ' + xpLevel);
-    }
-
-    navXpValue.textContent = totalXP + '/' + needed;
-    var pct = Math.min((totalXP / needed) * 100, 100);
-    xpBarFill.style.width = pct + '%';
-
-    statLvlNum.textContent = xpLevel;
-    statLvl.style.width = Math.min(xpLevel * 10, 100) + '%';
-    statExpNum.textContent = totalXP;
-    statExp.style.width = pct + '%';
-
-    if (sourceEl) {
-      showXPPopup(amount, sourceEl);
-    }
+  function updateDiscoveryBar() {
+    var count = discoveryOrder.length;
+    var pct = Math.min(Math.round((count / MAX_DISCOVERIES) * 100), 100);
+    navDiscFill.style.width = pct + '%';
+    navDiscValue.textContent = pct + '%';
+    terminalDiscovery.textContent = pct + '% explored';
   }
 
-  function showXPPopup(amount, el) {
-    var rect = el.getBoundingClientRect();
-    var popup = document.createElement('div');
-    popup.className = 'xp-popup';
-    popup.textContent = '+' + amount + ' XP';
-    popup.style.left = rect.left + rect.width / 2 - 20 + 'px';
-    popup.style.top = rect.top - 10 + 'px';
-    document.body.appendChild(popup);
-    setTimeout(function () { popup.remove(); }, 800);
+  function checkUnlocks() {
+    var count = discoveryOrder.length;
+    if (count >= 3 && !discoveries['snake_unlock']) {
+      discoveries['snake_unlock'] = true;
+      addTermLine('', '');
+      addTermLine('  *** NEW COMMAND UNLOCKED: <span class="cmd-hint">snake</span> ***', 'unlock');
+      showAchievement('SNAKE GAME UNLOCKED!');
+    }
+    if (count >= 5 && !discoveries['hack_unlock']) {
+      discoveries['hack_unlock'] = true;
+      addTermLine('', '');
+      addTermLine('  *** NEW COMMAND UNLOCKED: <span class="cmd-hint">hack</span> ***', 'unlock');
+      showAchievement('HACK MINI-GAME UNLOCKED!');
+    }
+    if (count >= MAX_DISCOVERIES && !discoveries['complete']) {
+      discoveries['complete'] = true;
+      addTermLine('', '');
+      addTermLine('  *** SYSTEM FULLY EXPLORED ***', 'unlock');
+      addTermLine('  You have discovered everything. Respect.', 'success');
+      showAchievement('100% COMPLETE - TRUE EXPLORER!');
+    }
   }
 
   // ===== ACHIEVEMENTS =====
@@ -179,100 +178,17 @@
     }, 3000);
   }
 
-  // ===== COLLECTIBLES =====
-  var collectibleColors = ['#00f0ff', '#ff00ff', '#39ff14', '#ffe600', '#ff3131'];
-  var collectibleShapes = ['&#9632;', '&#9670;', '&#9733;', '&#9679;'];
-  var collectibleCount = 0;
-
-  function spawnCollectible() {
-    var el = document.createElement('div');
-    el.className = 'collectible';
-    var color = collectibleColors[Math.floor(Math.random() * collectibleColors.length)];
-    var shape = collectibleShapes[Math.floor(Math.random() * collectibleShapes.length)];
-    var size = Math.floor(Math.random() * 10 + 14);
-    el.innerHTML = shape;
-    el.style.color = color;
-    el.style.fontSize = size + 'px';
-    el.style.left = (Math.random() * 80 + 10) + '%';
-    el.style.top = (Math.random() * 70 + 15) + '%';
-    el.style.animationDelay = (Math.random() * 2) + 's';
-
-    el.addEventListener('click', function () {
-      if (el.classList.contains('collected')) return;
-      el.classList.add('collected');
-      var xpGain = Math.floor(Math.random() * 15 + 5);
-      addXP(xpGain, el);
-      collectibleCount++;
-      if (collectibleCount === 1) {
-        showAchievement('FIRST COLLECT! Explore more!');
-      } else if (collectibleCount === 10) {
-        showAchievement('COLLECTOR x10! +25 BONUS XP');
-        addXP(25);
-      } else if (collectibleCount === 25) {
-        showAchievement('MASTER COLLECTOR x25!');
-      }
-      setTimeout(function () { el.remove(); }, 400);
-    });
-
-    document.body.appendChild(el);
-    setTimeout(function () {
-      if (el.parentNode) el.remove();
-    }, 8000);
-  }
-
-  setInterval(function () {
-    if (document.querySelectorAll('.collectible').length < 3) {
-      spawnCollectible();
-    }
-  }, 4000);
-
-  setTimeout(spawnCollectible, 2000);
-  setTimeout(spawnCollectible, 3500);
-
-  // ===== PROFILE IMAGE CLICK =====
-  var profileImage = document.getElementById('profileImage');
-  var imageClickHint = document.getElementById('imageClickHint');
-  var profileClicks = 0;
-  var profileMessages = [
-    'Hey! That tickles!',
-    'Stop poking me!',
-    'Still here!',
-    'Okay, you found me!',
-    '+10 XP for curiosity!',
-    'You really like clicking!',
-    'Have you tried the terminal?',
-    'Type "help" in the terminal!',
-    'Try "snake" for a surprise!',
-    'Konami code: Up Up Down Down...'
-  ];
-
-  profileImage.addEventListener('click', function () {
-    profileClicks++;
-    profileImage.classList.remove('clicked');
-    void profileImage.offsetWidth;
-    profileImage.classList.add('clicked');
-
-    if (imageClickHint && !imageClickHint.classList.contains('hidden')) {
-      imageClickHint.classList.add('hidden');
-      addXP(5, profileImage);
-      showAchievement('CURIOUS CLICKER +5 XP');
-    } else {
-      addXP(3, profileImage);
-    }
-
-    var msg = profileMessages[Math.min(profileClicks - 1, profileMessages.length - 1)];
-    addTermLine(msg, 'info');
-  });
-
   // ===== INTERACTIVE TERMINAL =====
   var terminalInput = document.getElementById('terminalInput');
   var terminalOutput = document.getElementById('terminalOutput');
   var terminalBody = document.getElementById('terminalBody');
+  var terminalInputLine = document.getElementById('terminalInputLine');
   var gamePanel = document.getElementById('gamePanel');
+  var hackPanel = document.getElementById('hackPanel');
   var mainTerminal = document.getElementById('mainTerminal');
   var commandHistory = [];
   var historyIndex = -1;
-  var terminalUsed = false;
+  var bootComplete = false;
 
   function addTermLine(text, cls) {
     var line = document.createElement('div');
@@ -294,126 +210,473 @@
     terminalOutput.innerHTML = '';
   }
 
+  // ===== BOOT SEQUENCE =====
+  function bootSequence() {
+    var bootLines = [
+      { text: 'BOOTING SYSTEM...', cls: 'system', delay: 300 },
+      { text: 'Loading kernel modules... OK', cls: '', delay: 250 },
+      { text: 'Initializing display... OK', cls: '', delay: 200 },
+      { text: 'Mounting /home/irshad... OK', cls: '', delay: 350 },
+      { text: 'Scanning network... OK', cls: '', delay: 200 },
+      { text: '', cls: '', delay: 100 },
+      { text: 'IRSHAD PC v3.0 — TERMINAL READY', cls: 'system', delay: 300 },
+      { text: 'Type <span class="cmd-hint">help</span> to see available commands.', cls: '', delay: 0 },
+    ];
+
+    var totalDelay = 0;
+    bootLines.forEach(function (item) {
+      totalDelay += item.delay;
+      setTimeout(function () {
+        addTermLine(item.text, item.cls);
+      }, totalDelay);
+    });
+
+    setTimeout(function () {
+      terminalInput.disabled = false;
+      terminalInput.focus();
+      bootComplete = true;
+      discover('boot');
+    }, totalDelay + 200);
+  }
+
+  var aboutObserver = new IntersectionObserver(
+    function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting && !bootComplete) {
+          bootSequence();
+          aboutObserver.disconnect();
+        }
+      });
+    },
+    { threshold: 0.3 }
+  );
+  aboutObserver.observe(document.getElementById('about'));
+
+  // ===== SCAN ANIMATION =====
+  var profileImage = document.getElementById('profileImage');
+  var scanDone = false;
+
+  function runScan() {
+    if (scanDone) {
+      addTermLine('Scan already completed. Data on file.', 'info');
+      return;
+    }
+    addTermLine('Initiating biometric scan...', 'system');
+    profileImage.classList.add('scanning');
+
+    setTimeout(function () {
+      profileImage.classList.remove('scanning');
+      profileImage.classList.add('scanned');
+      scanDone = true;
+      discover('scan');
+
+      addTermLine('', '');
+      addTermLine('SCAN RESULTS:', 'system');
+      addTermLine('  Subject: Irshad PC');
+      addTermLine('  Classification: Software Engineer');
+      addTermLine('  Location: India');
+      addTermLine('  Specialization: Full-stack development');
+      addTermLine('  Status: Actively building cool things');
+      addTermLine('  Threat level: None (friendly)');
+      addTermLine('', '');
+      addTermLine('An enthusiast with deep appreciation for', '');
+      addTermLine('mathematics and computer science. Always', '');
+      addTermLine('exploring innovative techniques.', '');
+    }, 1600);
+  }
+
+  // ===== SKILL BARS =====
+  var skillsShown = false;
+
+  function showSkills() {
+    if (skillsShown) {
+      addTermLine('Skills already displayed. Type <span class="cmd-hint">skills</span> to view.', 'info');
+      return;
+    }
+
+    addTermLine('TECH STACK ANALYSIS:', 'system');
+    addTermLine('', '');
+
+    var skills = [
+      { name: 'FRONTEND', pct: 90, color: 'cyan' },
+      { name: 'BACKEND', pct: 80, color: 'green' },
+      { name: 'DATABASE', pct: 70, color: 'magenta' },
+      { name: 'DEVOPS', pct: 65, color: 'yellow' },
+      { name: 'MOBILE', pct: 55, color: 'red' },
+    ];
+
+    skills.forEach(function (skill) {
+      var bar = document.createElement('div');
+      bar.className = 'skill-bar-term';
+      bar.innerHTML =
+        '<span class="skill-bar-name">' + skill.name + '</span>' +
+        '<span class="skill-bar-track"><span class="skill-bar-fill ' + skill.color + '" data-pct="' + skill.pct + '"></span></span>';
+      terminalOutput.appendChild(bar);
+    });
+
+    addTermLine('', '');
+    addTermLine('  React, Vue, TypeScript, JS', '');
+    addTermLine('  Node.js, Python, Go', '');
+    addTermLine('  PostgreSQL, MongoDB, Redis', '');
+    addTermLine('  Docker, AWS, CI/CD', '');
+    addTermLine('  React Native, Flutter', '');
+
+    terminalBody.scrollTop = terminalBody.scrollHeight;
+
+    setTimeout(function () {
+      document.querySelectorAll('.skill-bar-fill').forEach(function (fill) {
+        fill.style.width = fill.getAttribute('data-pct') + '%';
+      });
+    }, 100);
+
+    skillsShown = true;
+    discover('skills');
+  }
+
+  // ===== MATRIX RAIN =====
+  var matrixOverlay = document.getElementById('matrixOverlay');
+  var matrixCanvas = document.getElementById('matrixCanvas');
+  var matrixCtx = matrixCanvas.getContext('2d');
+  var matrixRunning = false;
+  var matrixAnimId = null;
+
+  function startMatrix() {
+    if (matrixRunning) {
+      stopMatrix();
+      return;
+    }
+    matrixRunning = true;
+    matrixOverlay.classList.remove('hidden');
+    matrixCanvas.width = window.innerWidth;
+    matrixCanvas.height = window.innerHeight;
+
+    var cols = Math.floor(matrixCanvas.width / 16);
+    var drops = [];
+    for (var i = 0; i < cols; i++) {
+      drops[i] = Math.random() * -100;
+    }
+
+    var chars = 'IRSHADPC0123456789@#$%&*<>{}[]';
+    discover('matrix');
+
+    function drawMatrix() {
+      matrixCtx.fillStyle = 'rgba(12, 12, 29, 0.1)';
+      matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+      matrixCtx.font = '14px "Press Start 2P", monospace';
+
+      for (var c = 0; c < cols; c++) {
+        var char = chars[Math.floor(Math.random() * chars.length)];
+        var x = c * 16;
+        var y = drops[c] * 16;
+        matrixCtx.fillStyle = '#00f0ff';
+        matrixCtx.shadowColor = 'rgba(0, 240, 255, 0.6)';
+        matrixCtx.shadowBlur = 4;
+        matrixCtx.fillText(char, x, y);
+        matrixCtx.shadowBlur = 0;
+        drops[c]++;
+        if (drops[c] * 16 > matrixCanvas.height && Math.random() > 0.98) {
+          drops[c] = 0;
+        }
+      }
+      matrixAnimId = requestAnimationFrame(drawMatrix);
+    }
+    drawMatrix();
+    addTermLine('Matrix rain activated. Type <span class="cmd-hint">matrix</span> again to stop.', 'info');
+  }
+
+  function stopMatrix() {
+    matrixRunning = false;
+    matrixOverlay.classList.add('hidden');
+    if (matrixAnimId) cancelAnimationFrame(matrixAnimId);
+    addTermLine('Matrix rain deactivated.', 'system');
+  }
+
+  // ===== HACK MINI-GAME =====
+  var hackWords = [
+    'javascript', 'react', 'python', 'docker', 'kubernetes',
+    'typescript', 'nodejs', 'database', 'algorithm', 'function',
+    'variable', 'terminal', 'compiler', 'network', 'protocol',
+    'async', 'promise', 'deploy', 'serverless', 'recursive'
+  ];
+  var hackActive = false;
+  var hackScore = 0;
+  var hackBest = parseInt(localStorage.getItem('hackBest')) || 0;
+  var hackTimerInterval = null;
+  var hackTimeLeft = 0;
+  var currentHackWord = '';
+  var hackInputEl = document.getElementById('hackInput');
+  var hackWordEl = document.getElementById('hackWord');
+  var hackScoreEl = document.getElementById('hackScore');
+  var hackBestEl = document.getElementById('hackBest');
+  var hackTimerEl = document.getElementById('hackTimer');
+
+  hackBestEl.textContent = hackBest;
+
+  function startHack() {
+    if (!discoveries['hack_unlock']) {
+      addTermLine('ACCESS DENIED. Explore more to unlock.', 'error');
+      addTermLine('Hint: discover ' + (5 - discoveryOrder.length) + ' more things.', 'info');
+      return;
+    }
+    hackActive = true;
+    hackScore = 0;
+    hackScoreEl.textContent = '0';
+    hackPanel.classList.remove('hidden');
+    mainTerminal.style.display = 'none';
+    nextHackWord();
+    hackInputEl.disabled = false;
+    hackInputEl.focus();
+    startHackTimer(15);
+    discover('hack');
+  }
+
+  function scrambleWord(word) {
+    var arr = word.split('');
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = arr[i];
+      arr[i] = arr[j];
+      arr[j] = tmp;
+    }
+    return arr.join('');
+  }
+
+  function nextHackWord() {
+    currentHackWord = hackWords[Math.floor(Math.random() * hackWords.length)];
+    hackWordEl.textContent = scrambleWord(currentHackWord).toUpperCase();
+    hackWordEl.className = 'hack-word';
+    hackInputEl.value = '';
+  }
+
+  function startHackTimer(seconds) {
+    hackTimeLeft = seconds;
+    hackTimerEl.textContent = hackTimeLeft + 's';
+    clearInterval(hackTimerInterval);
+    hackTimerInterval = setInterval(function () {
+      hackTimeLeft--;
+      hackTimerEl.textContent = hackTimeLeft + 's';
+      if (hackTimeLeft <= 0) {
+        endHack();
+      }
+    }, 1000);
+  }
+
+  function endHack() {
+    hackActive = false;
+    clearInterval(hackTimerInterval);
+    hackInputEl.disabled = true;
+
+    if (hackScore > hackBest) {
+      hackBest = hackScore;
+      localStorage.setItem('hackBest', hackBest);
+      hackBestEl.textContent = hackBest;
+    }
+
+    addTermLine('HACK SESSION ENDED', 'system');
+    addTermLine('Words decoded: ' + hackScore + ' | Best: ' + hackBest, 'info');
+    if (hackScore >= 5) {
+      addTermLine('Impressive decoding skills!', 'success');
+    } else if (hackScore >= 3) {
+      addTermLine('Not bad. Keep practicing.', 'info');
+    } else {
+      addTermLine('Better luck next time.', 'error');
+    }
+  }
+
+  function closeHack() {
+    hackActive = false;
+    clearInterval(hackTimerInterval);
+    hackInputEl.disabled = true;
+    hackPanel.classList.add('hidden');
+    mainTerminal.style.display = '';
+    terminalInput.focus();
+  }
+
+  hackInputEl.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      var answer = hackInputEl.value.trim().toLowerCase();
+      if (answer === currentHackWord) {
+        hackScore++;
+        hackScoreEl.textContent = hackScore;
+        hackWordEl.className = 'hack-word correct';
+        setTimeout(nextHackWord, 300);
+      } else {
+        hackWordEl.className = 'hack-word wrong';
+        setTimeout(function () {
+          hackWordEl.className = 'hack-word';
+          hackInputEl.value = '';
+        }, 300);
+      }
+    } else if (e.key === 'Escape') {
+      closeHack();
+    }
+  });
+
+  document.getElementById('hackPanelClose').addEventListener('click', closeHack);
+
+  // ===== TERMINAL COMMANDS =====
   var commands = {
     help: function () {
       addTermLine('Available commands:', 'system');
       addTermLine('  <span class="cmd-hint">about</span>     - Who am I');
-      addTermLine('  <span class="cmd-hint">skills</span>    - My tech stack');
+      addTermLine('  <span class="cmd-hint">skills</span>    - Tech stack analysis');
       addTermLine('  <span class="cmd-hint">projects</span>  - Things I built');
-      addTermLine('  <span class="cmd-hint">contact</span>   - Reach me');
-      addTermLine('  <span class="cmd-hint">snake</span>     - Play a game!');
+      addTermLine('  <span class="cmd-hint">contact</span>   - How to reach me');
+      addTermLine('  <span class="cmd-hint">scan</span>      - Scan the profile');
       addTermLine('  <span class="cmd-hint">matrix</span>    - Toggle matrix rain');
-      addTermLine('  <span class="cmd-hint">clear</span>     - Clear terminal');
-      addTermLine('  <span class="cmd-hint">exit</span>      - Back to top');
-      addTermLine('  <span class="cmd-hint">easter</span>    - ???');
-      addXP(2);
+      addTermLine('  <span class="cmd-hint">status</span>    - Exploration progress');
+      addTermLine('  <span class="cmd-hint">clear</span>     - Clear screen');
+      addTermLine('  <span class="cmd-hint">exit</span>      - Return to top');
+      if (discoveries['snake_unlock']) {
+        addTermLine('  <span class="cmd-hint">snake</span>     - Play Snake [UNLOCKED]', 'success');
+      } else {
+        addTermLine('  <span class="cmd-hint">snake</span>     - ??? (explore to unlock)', 'info');
+      }
+      if (discoveries['hack_unlock']) {
+        addTermLine('  <span class="cmd-hint">hack</span>      - Decode challenge [UNLOCKED]', 'success');
+      } else {
+        addTermLine('  <span class="cmd-hint">hack</span>      - ??? (explore to unlock)', 'info');
+      }
+      discover('help');
     },
     about: function () {
       addTermLine('IRSHAD PC // SOFTWARE ENGINEER', 'system');
+      addTermLine('', '');
       addTermLine('An enthusiastic thinker and engineer with a deep');
       addTermLine('appreciation for mathematics and computer science.');
+      addTermLine('', '');
+      addTermLine('I dedicate time to staying current in my field');
+      addTermLine('and continually enhance my skills by exploring');
+      addTermLine('innovative techniques in side projects.');
+      addTermLine('', '');
       addTermLine('I love building things that live on the internet.');
-      addTermLine('My goal is always pixel-perfect, performant experiences.');
-      addTermLine('LOCATION: India | EMAIL: irshadpc@yahoo.in', 'info');
-      addXP(3);
+      addTermLine('Goal: always pixel-perfect, performant experiences.');
+      addTermLine('', '');
+      addTermLine('LOCATION: India', 'info');
+      addTermLine('EMAIL: <a href="mailto:irshadpc@yahoo.in">irshadpc@yahoo.in</a>', 'info');
+      discover('about');
     },
     skills: function () {
-      addTermLine('TECH STACK:', 'system');
-      addTermLine('  FRONTEND  &#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9617;  React, Vue, TypeScript, JS');
-      addTermLine('  BACKEND   &#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9617;&#9617;  Node.js, Python, Go');
-      addTermLine('  DATABASE  &#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9617;&#9617;&#9617;  PostgreSQL, MongoDB, Redis');
-      addTermLine('  DEVOPS    &#9608;&#9608;&#9608;&#9608;&#9608;&#9617;&#9617;&#9617;&#9617;  Docker, AWS, CI/CD');
-      addTermLine('  MOBILE    &#9608;&#9608;&#9608;&#9608;&#9617;&#9617;&#9617;&#9617;&#9617;  React Native, Flutter');
-      addXP(3);
+      showSkills();
     },
     projects: function () {
       addTermLine('FEATURED PROJECTS:', 'system');
-      addTermLine('  [01] Portfolio v3    - This retro site!');
-      addTermLine('  [02] Open Source     - github.com/irshadpc');
-      addTermLine('  [03] Side Projects   - Always exploring');
-      addTermLine('Type <span class="cmd-hint">github</span> to visit my profile.', 'info');
-      addXP(3);
+      addTermLine('', '');
+      addTermLine('  [01] Portfolio v3', '');
+      addTermLine('       This retro-themed interactive site');
+      addTermLine('       Built with vanilla JS + retro game design', '');
+      addTermLine('', '');
+      addTermLine('  [02] Open Source Contributions', '');
+      addTermLine('       Active on GitHub, exploring new tech');
+      addTermLine('', '');
+      addTermLine('  [03] Side Projects', '');
+      addTermLine('       Always experimenting with new ideas', '');
+      addTermLine('', '');
+      addTermLine('Visit <a href="https://github.com/irshadpc" target="_blank">github.com/irshadpc</a> for more.', 'info');
+      discover('projects');
     },
     contact: function () {
-      addTermLine('REACH ME AT:', 'system');
-      addTermLine('  Email: <a href="mailto:irshadpc@yahoo.in">irshadpc@yahoo.in</a>');
-      addTermLine('  LinkedIn: <a href="https://www.linkedin.com/in/irshad-pc-1aaa3814" target="_blank">irshad-pc</a>');
-      addTermLine('  GitHub: <a href="https://github.com/irshadpc" target="_blank">irshadpc</a>');
-      addTermLine('  Twitter: <a href="https://twitter.com/_irshadpc" target="_blank">@_irshadpc</a>');
-      addXP(3);
+      addTermLine('COMMUNICATION CHANNELS:', 'system');
+      addTermLine('', '');
+      addTermLine('  <a href="mailto:irshadpc@yahoo.in">irshadpc@yahoo.in</a>', '');
+      addTermLine('  <a href="https://www.linkedin.com/in/irshad-pc-1aaa3814" target="_blank">LinkedIn: irshad-pc</a>', '');
+      addTermLine('  <a href="https://github.com/irshadpc" target="_blank">GitHub: irshadpc</a>', '');
+      addTermLine('  <a href="https://twitter.com/_irshadpc" target="_blank">Twitter: @_irshadpc</a>', '');
+      discover('contact');
+    },
+    scan: function () {
+      runScan();
     },
     snake: function () {
-      addTermLine('Launching SNAKE... Use arrow keys to play!', 'success');
-      addTermLine('Press ESC to exit back to terminal.', 'info');
+      if (!discoveries['snake_unlock']) {
+        addTermLine('ACCESS DENIED. Explore more to unlock this command.', 'error');
+        addTermLine('Discover ' + Math.max(0, 3 - discoveryOrder.length) + ' more things to unlock.', 'info');
+        return;
+      }
+      addTermLine('Launching SNAKE... Arrow keys to play!', 'success');
+      addTermLine('Press ESC to return to terminal.', 'info');
       gamePanel.classList.remove('hidden');
       mainTerminal.style.display = 'none';
-      addXP(10);
-      showAchievement('GAME UNLOCKED! +10 XP');
       resetSnakeGame();
+      discover('snake');
+    },
+    hack: function () {
+      startHack();
     },
     matrix: function () {
-      addTermLine('Matrix rain: not yet implemented. Stay tuned!', 'info');
-      addXP(2);
+      startMatrix();
+    },
+    status: function () {
+      var count = discoveryOrder.length;
+      var pct = Math.min(Math.round((count / MAX_DISCOVERIES) * 100), 100);
+      addTermLine('EXPLORATION STATUS:', 'system');
+      addTermLine('  Progress: ' + pct + '% (' + count + '/' + MAX_DISCOVERIES + ')', 'info');
+      addTermLine('  Discoveries: ' + discoveryOrder.join(', '), '');
+      if (!discoveries['snake_unlock']) {
+        addTermLine('  Snake unlocks at 25%', 'info');
+      }
+      if (!discoveries['hack_unlock']) {
+        addTermLine('  Hack unlocks at 42%', 'info');
+      }
+      discover('status');
     },
     clear: function () {
       clearTerminal();
-      addXP(1);
     },
     exit: function () {
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      addTermLine('Returning to base...', 'system');
-      addXP(1);
+      addTermLine('Returning to home...', 'system');
+    },
+    ls: function () {
+      addTermLine('about.txt  skills.dat  projects/  contact.md  profile.img  secret.zip', 'system');
+      discover('ls');
+    },
+    cat: function (args) {
+      if (args && args.indexOf('secret') !== -1) {
+        addTermLine('ACCESS DENIED. Encryption level: maximum.', 'error');
+        addTermLine('But you get points for trying.', 'success');
+        discover('secret');
+      } else if (args && args.indexOf('about') !== -1) {
+        commands.about();
+      } else {
+        addTermLine('Usage: cat &lt;filename&gt;', 'info');
+        addTermLine('Files: about.txt, skills.dat, secret.zip', 'info');
+      }
+    },
+    whoami: function () {
+      addTermLine('You are an explorer in a digital realm.', 'system');
+      addTermLine('Your mission: discover everything.', '');
+      discover('whoami');
+    },
+    sudo: function () {
+      addTermLine('Nice try. Root access denied.', 'error');
+      addTermLine('But persistence is noted.', 'info');
+      discover('sudo');
+    },
+    hello: function () {
+      addTermLine('Hello, explorer! Keep discovering.', 'success');
+    },
+    date: function () {
+      addTermLine(new Date().toLocaleString(), 'system');
     },
     github: function () {
       addTermLine('Opening GitHub...', 'info');
       window.open('https://github.com/irshadpc', '_blank');
-      addXP(2);
     },
-    easter: function () {
-      var msgs = [
-        'The cake is a lie.',
-        'There is no spoon.',
-        'Do a barrel roll!',
-        'All your base are belong to us.',
-        'The answer is 42.',
-        'Konami code works here too...'
-      ];
-      addTermLine(msgs[Math.floor(Math.random() * msgs.length)], 'info');
-      addXP(5);
-      showAchievement('EASTER EGG! +5 XP');
+    password: function () {
+      addTermLine('There is no password. Keep exploring.', 'info');
+      discover('password');
     },
-    sudo: function () {
-      addTermLine('Nice try. Access denied.', 'error');
-      addXP(2);
+    42: function () {
+      addTermLine('The answer to life, the universe, and everything.', 'info');
+      discover('42');
     },
-    hello: function () {
-      addTermLine('Hello, fellow explorer! Keep going!', 'success');
-      addXP(2);
+    irshad: function () {
+      addTermLine('Yes, that is the sysadmin. Full access not granted.', 'info');
     },
-    ls: function () {
-      addTermLine('about.txt  skills.dat  projects/  contact.md  snake.exe  secret.zip', 'system');
-      addXP(2);
-    },
-    cat: function (args) {
-      if (args && args.indexOf('secret') !== -1) {
-        addTermLine('ACCESS DENIED. Try harder.', 'error');
-        addXP(5);
-        showAchievement('FOUND SECRET FILE! +5 XP');
-      } else {
-        addTermLine('Usage: cat &lt;filename&gt;', 'info');
-      }
-    },
-    whoami: function () {
-      addTermLine('You are Player One. An explorer of this digital realm.', 'system');
-      addXP(2);
-    },
-    date: function () {
-      addTermLine(new Date().toLocaleString(), 'system');
-      addXP(1);
-    },
-    xp: function () {
-      addTermLine('Level: ' + xpLevel + ' | XP: ' + totalXP + '/' + xpForLevel(xpLevel) + ' | Collectibles: ' + collectibleCount, 'info');
-      addXP(1);
+    helpme: function () {
+      addTermLine('Did you mean <span class="cmd-hint">help</span>?', 'info');
     }
   };
 
@@ -424,12 +687,6 @@
 
     if (!cmd) return;
 
-    if (!terminalUsed) {
-      terminalUsed = true;
-      addXP(5);
-      showAchievement('TERMINAL ACTIVATED! +5 XP');
-    }
-
     commandHistory.unshift(input);
     historyIndex = -1;
 
@@ -438,15 +695,13 @@
       commands[cmd](args);
     } else {
       addCmdEcho(input);
-      addTermLine('Command not found: ' + escapeHtml(cmd) + '. Type <span class="cmd-hint">help</span>', 'error');
-      addXP(1);
+      addTermLine('Command not found: ' + escapeHtml(cmd), 'error');
+      addTermLine('Type <span class="cmd-hint">help</span> for available commands.', 'info');
     }
   }
 
   terminalInput.addEventListener('keydown', function (e) {
-    if (snakeGameActive) {
-      return;
-    }
+    if (snakeGameActive || hackActive) return;
 
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -471,12 +726,12 @@
   });
 
   mainTerminal.addEventListener('click', function () {
-    if (!snakeGameActive) {
+    if (!snakeGameActive && !hackActive && bootComplete) {
       terminalInput.focus();
     }
   });
 
-  // ===== SNAKE GAME (in terminal) =====
+  // ===== SNAKE GAME =====
   var canvas = document.getElementById('gameCanvas');
   var ctx = canvas.getContext('2d');
   var overlay = document.getElementById('gameOverlay');
@@ -485,7 +740,6 @@
   var startBtn = document.getElementById('gameStartBtn');
   var scoreEl = document.getElementById('score');
   var hiscoreEl = document.getElementById('hiscore');
-  var controlsEl = document.getElementById('gameControls');
   var gamePanelClose = document.getElementById('gamePanelClose');
 
   var GRID = 20;
@@ -628,13 +882,10 @@
       hiscoreEl.textContent = hiScore;
     }
 
-    var xpEarned = Math.floor(score / 2);
-    addXP(xpEarned);
-
     overlayTitle.textContent = 'GAME OVER';
     overlayTitle.style.color = '#ff3131';
     overlayTitle.style.textShadow = '0 0 10px rgba(255,49,49,0.5), 0 0 40px rgba(255,49,49,0.2)';
-    overlaySubtitle.textContent = 'SCORE: ' + score + ' | +' + xpEarned + ' XP';
+    overlaySubtitle.textContent = 'SCORE: ' + score;
     startBtn.innerHTML = '<span class="btn-arrow">&#9654;</span> RETRY';
     overlay.classList.remove('hidden');
 
@@ -707,9 +958,15 @@
 
   // ===== GLOBAL KEY HANDLER =====
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && snakeGameActive) {
-      closeSnakeGame();
-      return;
+    if (e.key === 'Escape') {
+      if (snakeGameActive) {
+        closeSnakeGame();
+        return;
+      }
+      if (hackActive) {
+        closeHack();
+        return;
+      }
     }
 
     if (!snakeGameActive) return;
@@ -734,32 +991,7 @@
     }
   });
 
-  // ===== SECTION VISIT XP =====
-  var visitedSections = {};
-  var sectionObserver = new IntersectionObserver(
-    function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          var id = entry.target.getAttribute('id');
-          if (!visitedSections[id]) {
-            visitedSections[id] = true;
-            addXP(5);
-            if (id === 'about') {
-              showAchievement('SECTION EXPLORED: ABOUT +5 XP');
-              setTimeout(function () { terminalInput.focus(); }, 500);
-            }
-          }
-        }
-      });
-    },
-    { threshold: 0.3 }
-  );
-
-  sections.forEach(function (section) {
-    sectionObserver.observe(section);
-  });
-
   // ===== INIT =====
-  addXP(0);
+  updateDiscoveryBar();
   drawSnakeFrame();
 })();
