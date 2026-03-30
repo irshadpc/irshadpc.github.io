@@ -15,14 +15,20 @@
 <body>
   <div class="scanlines"></div>
   <div class="crt-flicker"></div>
+  <div class="xp-bar-top" id="xpBarTop">
+    <div class="xp-bar-fill" id="xpBarFill"></div>
+  </div>
 
   <nav class="navbar" id="navbar">
     <div class="nav-container">
       <a href="#hero" class="nav-logo">IRSHAD<span>PC</span></a>
+      <div class="nav-xp" id="navXp">
+        <span class="nav-xp-label">XP</span>
+        <span class="nav-xp-value" id="navXpValue">0</span>
+      </div>
       <ul class="nav-links" id="navLinks">
         <li><a href="#hero">&gt; HOME</a></li>
         <li><a href="#about">&gt; ABOUT</a></li>
-        <li><a href="#game">&gt; ARCADE</a></li>
       </ul>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
         <span></span><span></span><span></span>
@@ -51,21 +57,21 @@
           <div class="stat">
             <span class="stat-label">LVL</span>
             <span class="stat-bar">
-              <span class="stat-fill" style="width:85%"></span>
+              <span class="stat-fill" id="statLvl" style="width:0%"></span>
             </span>
-            <span class="stat-num">85</span>
+            <span class="stat-num" id="statLvlNum">1</span>
           </div>
           <div class="stat">
             <span class="stat-label">EXP</span>
             <span class="stat-bar">
-              <span class="stat-fill" style="width:62%"></span>
+              <span class="stat-fill" id="statExp" style="width:0%"></span>
             </span>
-            <span class="stat-num">62</span>
+            <span class="stat-num" id="statExpNum">0</span>
           </div>
         </div>
         <div class="hero-cta fade-up delay-3">
           <a href="#about" class="btn btn-retro">
-            <span class="btn-arrow">&#9654;</span> ABOUT ME
+            <span class="btn-arrow">&#9654;</span> EXPLORE
           </a>
         </div>
         <div class="hero-social fade-up delay-4">
@@ -76,7 +82,7 @@
       </div>
     </div>
     <a href="#about" class="scroll-indicator" aria-label="Scroll down">
-      <span class="blink-text">PRESS DOWN</span>
+      <span class="blink-text">SCROLL DOWN</span>
       <div class="arrow-down"></div>
     </a>
   </section>
@@ -88,52 +94,39 @@
       </h2>
       <div class="about-grid reveal">
         <div class="about-image">
-          <div class="image-wrapper">
+          <div class="image-wrapper" id="profileImage">
             <div class="image-border"></div>
             <img src="img/profile.jpg" alt="Irshad PC" loading="lazy">
+            <div class="image-click-hint" id="imageClickHint">CLICK ME</div>
           </div>
         </div>
         <div class="about-text">
-          <div class="terminal">
+          <div class="terminal" id="mainTerminal">
             <div class="terminal-bar">
               <span class="terminal-dot"></span>
               <span class="terminal-dot"></span>
               <span class="terminal-dot"></span>
-              <span class="terminal-title">about.exe</span>
+              <span class="terminal-title">irshad@pc:~</span>
             </div>
-            <div class="terminal-body">
-              <p><span class="prompt">&gt;</span> I am an enthusiastic thinker and engineer with a deep appreciation for mathematics and computer science.</p>
-              <p><span class="prompt">&gt;</span> I dedicate a great deal of time to staying current in my field and continually strive to enhance my skills by exploring innovative techniques in my side projects.</p>
-              <p><span class="prompt">&gt;</span> I love building things that live on the internet. My goal is to always build products that provide pixel-perfect, performant experiences.</p>
-              <div class="terminal-cursor">
-                <span class="prompt">&gt;</span><span class="blink-cursor">_</span>
+            <div class="terminal-body" id="terminalBody">
+              <div class="terminal-output" id="terminalOutput">
+                <div class="term-line"><span class="prompt">&gt;</span> Welcome! Type <span class="cmd-hint">help</span> to see commands.</div>
+              </div>
+              <div class="terminal-input-line">
+                <span class="prompt">&gt;</span>
+                <input type="text" class="terminal-input" id="terminalInput" autocomplete="off" spellcheck="false">
               </div>
             </div>
           </div>
-          <div class="about-details">
-            <div class="detail">
-              <span class="detail-label">LOCATION</span>
-              <span class="detail-value">India</span>
+          <div class="game-panel hidden" id="gamePanel">
+            <div class="game-panel-bar">
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-title">snake.exe</span>
+              <button class="game-panel-close" id="gamePanelClose" aria-label="Close game">[X]</button>
             </div>
-            <div class="detail">
-              <span class="detail-label">EMAIL</span>
-              <span class="detail-value"><a href="mailto:irshadpc@yahoo.in">irshadpc@yahoo.in</a></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section-game" id="game">
-    <div class="container">
-      <h2 class="section-title reveal">
-        <span class="title-bracket">[</span> ARCADE <span class="title-bracket">]</span>
-      </h2>
-      <div class="game-wrapper reveal">
-        <div class="game- cabinet">
-          <div class="game-screen">
-            <div class="game-hud">
+            <div class="game-panel-hud">
               <div class="hud-item">
                 <span class="hud-label">SCORE</span>
                 <span class="hud-value" id="score">0</span>
@@ -143,29 +136,29 @@
                 <span class="hud-value" id="hiscore">0</span>
               </div>
             </div>
-            <canvas id="gameCanvas" width="400" height="400"></canvas>
-            <div class="game-overlay" id="gameOverlay">
-              <div class="overlay-content">
-                <p class="game-title-text" id="overlayTitle">SNAKE</p>
-                <p class="game-sub-text" id="overlaySubtitle">PRESS START OR SPACE</p>
-                <button class="btn btn-retro game-start-btn" id="gameStartBtn">
-                  <span class="btn-arrow">&#9654;</span> START
-                </button>
+            <div class="game-screen-inner">
+              <canvas id="gameCanvas" width="400" height="300"></canvas>
+              <div class="game-overlay" id="gameOverlay">
+                <div class="overlay-content">
+                  <p class="game-title-text" id="overlayTitle">SNAKE</p>
+                  <p class="game-sub-text" id="overlaySubtitle">PRESS START OR SPACE</p>
+                  <button class="btn btn-retro game-start-btn" id="gameStartBtn">
+                    <span class="btn-arrow">&#9654;</span> START
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="game-controls" id="gameControls">
-            <button class="ctrl-btn" data-dir="up" aria-label="Up">&#9650;</button>
-            <div class="ctrl-row">
-              <button class="ctrl-btn" data-dir="left" aria-label="Left">&#9664;</button>
-              <button class="ctrl-btn" data-dir="down" aria-label="Down">&#9660;</button>
-              <button class="ctrl-btn" data-dir="right" aria-label="Right">&#9654;</button>
+            <div class="game-controls" id="gameControls">
+              <button class="ctrl-btn" data-dir="up" aria-label="Up">&#9650;</button>
+              <div class="ctrl-row">
+                <button class="ctrl-btn" data-dir="left" aria-label="Left">&#9664;</button>
+                <button class="ctrl-btn" data-dir="down" aria-label="Down">&#9660;</button>
+                <button class="ctrl-btn" data-dir="right" aria-label="Right">&#9654;</button>
+              </div>
             </div>
-          </div>
-          <div class="game-instructions">
-            <p>&#9654; ARROW KEYS / SWIPE / TAP BUTTONS</p>
-            <p>&#9654; EAT &#9632; TO GROW AND SCORE</p>
-            <p>&#9654; DON'T HIT WALLS OR YOURSELF</p>
+            <div class="game-instructions">
+              <p>&#9654; ARROWS / SWIPE / TAP &bull; &#9654; EAT &#9632; TO SCORE &bull; &#9654; ESC TO EXIT</p>
+            </div>
           </div>
         </div>
       </div>
@@ -177,6 +170,11 @@
       <p>&copy; 2026 IRSHAD PC &mdash; GAME OVER? NEVER.</p>
     </div>
   </footer>
+
+  <div class="achievement-popup" id="achievementPopup">
+    <span class="achievement-icon">&#9733;</span>
+    <span class="achievement-text" id="achievementText"></span>
+  </div>
 
   <script src="js/main.js"></script>
 </body>
