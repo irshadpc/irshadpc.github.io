@@ -22,6 +22,7 @@
       <ul class="nav-links" id="navLinks">
         <li><a href="#hero">&gt; HOME</a></li>
         <li><a href="#about">&gt; ABOUT</a></li>
+        <li><a href="#game">&gt; ARCADE</a></li>
       </ul>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
         <span></span><span></span><span></span>
@@ -118,6 +119,53 @@
               <span class="detail-label">EMAIL</span>
               <span class="detail-value"><a href="mailto:irshadpc@yahoo.in">irshadpc@yahoo.in</a></span>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-game" id="game">
+    <div class="container">
+      <h2 class="section-title reveal">
+        <span class="title-bracket">[</span> ARCADE <span class="title-bracket">]</span>
+      </h2>
+      <div class="game-wrapper reveal">
+        <div class="game- cabinet">
+          <div class="game-screen">
+            <div class="game-hud">
+              <div class="hud-item">
+                <span class="hud-label">SCORE</span>
+                <span class="hud-value" id="score">0</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">HI-SCORE</span>
+                <span class="hud-value" id="hiscore">0</span>
+              </div>
+            </div>
+            <canvas id="gameCanvas" width="400" height="400"></canvas>
+            <div class="game-overlay" id="gameOverlay">
+              <div class="overlay-content">
+                <p class="game-title-text" id="overlayTitle">SNAKE</p>
+                <p class="game-sub-text" id="overlaySubtitle">PRESS START OR SPACE</p>
+                <button class="btn btn-retro game-start-btn" id="gameStartBtn">
+                  <span class="btn-arrow">&#9654;</span> START
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="game-controls" id="gameControls">
+            <button class="ctrl-btn" data-dir="up" aria-label="Up">&#9650;</button>
+            <div class="ctrl-row">
+              <button class="ctrl-btn" data-dir="left" aria-label="Left">&#9664;</button>
+              <button class="ctrl-btn" data-dir="down" aria-label="Down">&#9660;</button>
+              <button class="ctrl-btn" data-dir="right" aria-label="Right">&#9654;</button>
+            </div>
+          </div>
+          <div class="game-instructions">
+            <p>&#9654; ARROW KEYS / SWIPE / TAP BUTTONS</p>
+            <p>&#9654; EAT &#9632; TO GROW AND SCORE</p>
+            <p>&#9654; DON'T HIT WALLS OR YOURSELF</p>
           </div>
         </div>
       </div>
