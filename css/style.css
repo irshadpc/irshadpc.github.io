@@ -457,6 +457,7 @@ a:hover {
   overflow: hidden;
   aspect-ratio: 1;
   transition: all 0.3s;
+  background: var(--bg);
 }
 
 .image-wrapper.scanning {
@@ -503,17 +504,156 @@ a:hover {
   height: 100%;
   object-fit: cover;
   display: block;
-  filter: saturate(1.3) contrast(1.1);
-  image-rendering: auto;
-  transition: filter 0.3s;
+  filter: saturate(0) contrast(3) brightness(0.4) hue-rotate(180deg);
+  opacity: 0.3;
+  transition: filter 0.8s, opacity 0.8s;
 }
 
 .image-wrapper.scanned img {
-  filter: saturate(1.5) contrast(1.2) brightness(1.05);
+  filter: saturate(1.8) contrast(1.4) brightness(0.85) hue-rotate(0deg);
+  opacity: 0.7;
 }
 
 .image-wrapper.scanning img {
-  filter: saturate(0) contrast(2) brightness(1.3);
+  filter: saturate(0) contrast(4) brightness(1.5);
+  opacity: 0.5;
+  animation: cyberGlitch 0.1s steps(2) infinite;
+}
+
+@keyframes cyberGlitch {
+  0% { clip-path: inset(10% 0 80% 0); transform: translate(-2px, 0); }
+  25% { clip-path: inset(40% 0 30% 0); transform: translate(2px, 0); }
+  50% { clip-path: inset(70% 0 5% 0); transform: translate(-1px, 0); }
+  75% { clip-path: inset(20% 0 50% 0); transform: translate(1px, 0); }
+  100% { clip-path: inset(50% 0 20% 0); transform: translate(0, 0); }
+}
+
+.image-cyber-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 240, 255, 0.03) 2px,
+      rgba(0, 240, 255, 0.03) 4px
+    ),
+    radial-gradient(ellipse at center, transparent 40%, rgba(12, 12, 29, 0.6) 100%);
+}
+
+.image-grid-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.image-glitch-strip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  pointer-events: none;
+  background: var(--cyan);
+  opacity: 0;
+  mix-blend-mode: screen;
+}
+
+.image-glitch-strip.s1 {
+  top: 25%;
+  height: 2px;
+  animation: glitchStrip1 4s steps(1) infinite;
+}
+
+.image-glitch-strip.s2 {
+  top: 55%;
+  height: 3px;
+  background: var(--magenta);
+  animation: glitchStrip2 3s steps(1) infinite;
+}
+
+.image-glitch-strip.s3 {
+  top: 78%;
+  height: 1px;
+  animation: glitchStrip3 5s steps(1) infinite;
+}
+
+@keyframes glitchStrip1 {
+  0%, 89% { opacity: 0; }
+  90% { opacity: 0.6; transform: translateX(-5px); }
+  92% { opacity: 0.8; transform: translateX(3px); }
+  94% { opacity: 0; }
+}
+
+@keyframes glitchStrip2 {
+  0%, 79% { opacity: 0; }
+  80% { opacity: 0.5; transform: translateX(4px); }
+  83% { opacity: 0.7; transform: translateX(-2px); }
+  85% { opacity: 0; }
+}
+
+@keyframes glitchStrip3 {
+  0%, 93% { opacity: 0; }
+  94% { opacity: 0.4; }
+  96% { opacity: 0; }
+}
+
+.image-hud-text {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  z-index: 6;
+  pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+}
+
+.image-hud-text span {
+  font-family: var(--pixel);
+  font-size: 0.3rem;
+  color: var(--cyan);
+  text-shadow: 0 0 4px rgba(0, 240, 255, 0.6);
+  opacity: 0.7;
+  animation: hudFlicker 3s steps(1) infinite;
+}
+
+@keyframes hudFlicker {
+  0%, 95% { opacity: 0.7; }
+  96% { opacity: 0; }
+  97% { opacity: 0.7; }
+  98% { opacity: 0; }
+  100% { opacity: 0.7; }
+}
+
+.image-corner-data {
+  position: absolute;
+  z-index: 6;
+  pointer-events: none;
+  font-family: var(--pixel);
+  font-size: 0.3rem;
+  opacity: 0.5;
+}
+
+.image-corner-data.data-tl {
+  top: 24px;
+  left: 8px;
+  color: var(--green);
+  text-shadow: 0 0 4px rgba(57, 255, 20, 0.4);
+  animation: blink 2.5s step-end infinite;
+}
+
+.image-corner-data.data-br {
+  bottom: 8px;
+  right: 8px;
+  color: var(--text-dim);
 }
 
 .image-label {
