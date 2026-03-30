@@ -8,26 +8,20 @@
   <title>Irshad PC</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
-  <svg style="position:absolute;width:0;height:0">
-    <defs>
-      <filter id="oil-paint">
-        <feTurbulence type="fractalNoise" baseFrequency="0.025" numOctaves="8" result="noise"/>
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="12" xChannelSelector="R" yChannelSelector="G"/>
-        <feGaussianBlur stdDeviation="0.8"/>
-      </filter>
-    </defs>
-  </svg>
+  <div class="scanlines"></div>
+  <div class="crt-flicker"></div>
+
   <nav class="navbar" id="navbar">
     <div class="nav-container">
-      <a href="#hero" class="nav-logo">Irshad<span>PC</span></a>
+      <a href="#hero" class="nav-logo">IRSHAD<span>PC</span></a>
       <ul class="nav-links" id="navLinks">
-        <li><a href="#hero">Home</a></li>
-        <li><a href="#about">About</a></li>
+        <li><a href="#hero">&gt; HOME</a></li>
+        <li><a href="#about">&gt; ABOUT</a></li>
       </ul>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
         <span></span><span></span><span></span>
@@ -36,46 +30,92 @@
   </nav>
 
   <section class="hero" id="hero">
+    <div class="pixel-grid"></div>
     <div class="hero-particles" id="particles"></div>
     <div class="hero-content">
-      <p class="hero-greeting fade-up">Hello, I'm</p>
-      <h1 class="hero-name fade-up delay-1">Irshad PC</h1>
-      <p class="hero-tagline fade-up delay-2">Built from thought. Finished with care.</p>
-      <div class="hero-cta fade-up delay-3">
-        <a href="#about" class="btn btn-primary">About Me</a>
-      </div>
-      <div class="hero-social fade-up delay-4">
-        <a href="https://www.linkedin.com/in/irshad-pc-1aaa3814" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-        <a href="https://github.com/irshadpc" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
-        <a href="https://twitter.com/_irshadpc" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+      <div class="hero-frame">
+        <div class="frame-corner frame-tl"></div>
+        <div class="frame-corner frame-tr"></div>
+        <div class="frame-corner frame-bl"></div>
+        <div class="frame-corner frame-br"></div>
+        <p class="hero-greeting fade-up">PLAYER ONE</p>
+        <h1 class="hero-name fade-up delay-1">IRSHAD PC</h1>
+        <div class="hero-divider fade-up delay-2">
+          <span>&#9608;&#9608;&#9608;</span>
+        </div>
+        <p class="hero-tagline fade-up delay-2">
+          <span id="typewriter"></span><span class="cursor-blink">_</span>
+        </p>
+        <div class="hero-stats fade-up delay-3">
+          <div class="stat">
+            <span class="stat-label">LVL</span>
+            <span class="stat-bar">
+              <span class="stat-fill" style="width:85%"></span>
+            </span>
+            <span class="stat-num">85</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">EXP</span>
+            <span class="stat-bar">
+              <span class="stat-fill" style="width:62%"></span>
+            </span>
+            <span class="stat-num">62</span>
+          </div>
+        </div>
+        <div class="hero-cta fade-up delay-3">
+          <a href="#about" class="btn btn-retro">
+            <span class="btn-arrow">&#9654;</span> ABOUT ME
+          </a>
+        </div>
+        <div class="hero-social fade-up delay-4">
+          <a href="https://www.linkedin.com/in/irshad-pc-1aaa3814" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="https://github.com/irshadpc" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          <a href="https://twitter.com/_irshadpc" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+        </div>
       </div>
     </div>
     <a href="#about" class="scroll-indicator" aria-label="Scroll down">
-      <div class="mouse">
-        <div class="wheel"></div>
-      </div>
+      <span class="blink-text">PRESS DOWN</span>
+      <div class="arrow-down"></div>
     </a>
   </section>
 
   <section class="section" id="about">
     <div class="container">
-      <h2 class="section-title reveal">About Me</h2>
+      <h2 class="section-title reveal">
+        <span class="title-bracket">[</span> ABOUT ME <span class="title-bracket">]</span>
+      </h2>
       <div class="about-grid reveal">
         <div class="about-image">
           <div class="image-wrapper">
+            <div class="image-border"></div>
             <img src="img/profile.jpg" alt="Irshad PC" loading="lazy">
           </div>
         </div>
         <div class="about-text">
-          <p>I am an enthusiastic thinker and engineer with a deep appreciation for mathematics and computer science. I dedicate a great deal of time to staying current in my field and continually strive to enhance my skills by exploring innovative techniques in my side projects.</p>
-          <p>I love building things that live on the internet, whether that be websites, applications, or anything in between. My goal is to always build products that provide pixel-perfect, performant experiences.</p>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-title">about.exe</span>
+            </div>
+            <div class="terminal-body">
+              <p><span class="prompt">&gt;</span> I am an enthusiastic thinker and engineer with a deep appreciation for mathematics and computer science.</p>
+              <p><span class="prompt">&gt;</span> I dedicate a great deal of time to staying current in my field and continually strive to enhance my skills by exploring innovative techniques in my side projects.</p>
+              <p><span class="prompt">&gt;</span> I love building things that live on the internet. My goal is to always build products that provide pixel-perfect, performant experiences.</p>
+              <div class="terminal-cursor">
+                <span class="prompt">&gt;</span><span class="blink-cursor">_</span>
+              </div>
+            </div>
+          </div>
           <div class="about-details">
             <div class="detail">
-              <span class="detail-label">Location</span>
+              <span class="detail-label">LOCATION</span>
               <span class="detail-value">India</span>
             </div>
             <div class="detail">
-              <span class="detail-label">Email</span>
+              <span class="detail-label">EMAIL</span>
               <span class="detail-value"><a href="mailto:irshadpc@yahoo.in">irshadpc@yahoo.in</a></span>
             </div>
           </div>
@@ -86,7 +126,7 @@
 
   <footer class="footer">
     <div class="container">
-      <p>Designed &amp; Built by <strong>Irshad PC</strong></p>
+      <p>&copy; 2026 IRSHAD PC &mdash; GAME OVER? NEVER.</p>
     </div>
   </footer>
 
