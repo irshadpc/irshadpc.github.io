@@ -28,6 +28,15 @@
         <li><a href="#hero">&gt; HOME</a></li>
         <li><a href="#about">&gt; TERMINAL</a></li>
       </ul>
+      <button class="sound-toggle" id="soundToggle" aria-label="Toggle sound">
+        <span class="sound-icon">&#128266;</span>
+      </button>
+      <button class="treasure-btn" id="treasureBtn" aria-label="Open treasure map">
+        <span class="treasure-icon">&#128726;</span>
+      </button>
+      <button class="scoreboard-btn" id="scoreboardBtn" aria-label="Open scoreboard">
+        <span class="scoreboard-icon">&#127942;</span>
+      </button>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
         <span></span><span></span><span></span>
       </button>
@@ -75,25 +84,6 @@
         <span class="title-bracket">[</span> TERMINAL <span class="title-bracket">]</span>
       </h2>
       <div class="about-grid reveal">
-        <div class="about-image">
-          <div class="image-wrapper" id="profileImage">
-            <div class="image-border"></div>
-            <div class="image-scanline" id="imageScanline"></div>
-            <div class="image-cyber-overlay"></div>
-            <img src="img/profile.jpg" alt="Irshad PC" loading="lazy">
-            <div class="image-grid-overlay"></div>
-            <div class="image-glitch-strip s1"></div>
-            <div class="image-glitch-strip s2"></div>
-            <div class="image-glitch-strip s3"></div>
-            <div class="image-hud-text">
-              <span>ID:PC_IRS_7F3A</span>
-              <span>CLR:ACTIVE</span>
-            </div>
-            <div class="image-corner-data data-tl">SYS:ONLINE</div>
-            <div class="image-corner-data data-br">v3.0.26</div>
-          </div>
-          <div class="image-label">Type <span class="cmd-hint-inline">scan</span> to decode</div>
-        </div>
         <div class="about-text">
           <div class="terminal" id="mainTerminal">
             <div class="terminal-bar">
@@ -176,6 +166,456 @@
               </div>
             </div>
           </div>
+          <div class="type-panel hidden" id="typePanel">
+            <div class="type-panel-bar">
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-title">type.exe</span>
+              <button class="game-panel-close" id="typePanelClose" aria-label="Close typing game">[X]</button>
+            </div>
+            <div class="type-panel-hud">
+              <div class="hud-item">
+                <span class="hud-label">WPM</span>
+                <span class="hud-value" id="typeWpm">0</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">ACCURACY</span>
+                <span class="hud-value" id="typeAccuracy">100%</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">SCORE</span>
+                <span class="hud-value" id="typeScore">0</span>
+              </div>
+            </div>
+            <div class="type-game-area">
+              <div class="falling-words" id="fallingWords"></div>
+              <div class="type-input-area">
+                <span class="prompt">&gt;</span>
+                <input type="text" class="terminal-input" id="typeInput" autocomplete="off" spellcheck="false" disabled>
+              </div>
+            </div>
+            <div class="game-overlay" id="typeOverlay">
+              <div class="overlay-content">
+                <p class="game-title-text" id="typeOverlayTitle">TYPE SPEED</p>
+                <p class="game-sub-text" id="typeOverlaySubtitle">TYPE THE FALLING CODE!</p>
+                <button class="btn btn-retro game-start-btn" id="typeStartBtn">
+                  <span class="btn-arrow">&#9654;</span> START
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="memory-panel hidden" id="memoryPanel">
+            <div class="memory-panel-bar">
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-title">memory.exe</span>
+              <button class="game-panel-close" id="memoryPanelClose" aria-label="Close memory game">[X]</button>
+            </div>
+            <div class="memory-panel-hud">
+              <div class="hud-item">
+                <span class="hud-label">MOVES</span>
+                <span class="hud-value" id="memoryMoves">0</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">PAIRS</span>
+                <span class="hud-value" id="memoryPairs">0/8</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">TIME</span>
+                <span class="hud-value" id="memoryTime">0:00</span>
+              </div>
+            </div>
+            <div class="memory-grid" id="memoryGrid"></div>
+            <div class="game-overlay" id="memoryOverlay">
+              <div class="overlay-content">
+                <p class="game-title-text" id="memoryOverlayTitle">MEMORY MATCH</p>
+                <p class="game-sub-text" id="memoryOverlaySubtitle">MATCH THE CYBER SYMBOLS!</p>
+                <button class="btn btn-retro game-start-btn" id="memoryStartBtn">
+                  <span class="btn-arrow">&#9654;</span> START
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="quiz-panel hidden" id="quizPanel">
+            <div class="quiz-panel-bar">
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-title">quiz.exe</span>
+              <button class="game-panel-close" id="quizPanelClose" aria-label="Close quiz">[X]</button>
+            </div>
+            <div class="quiz-panel-hud">
+              <div class="hud-item">
+                <span class="hud-label">SCORE</span>
+                <span class="hud-value" id="quizScore">0</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">STREAK</span>
+                <span class="hud-value" id="quizStreak">0</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">QUESTION</span>
+                <span class="hud-value" id="quizQuestionNum">1/10</span>
+              </div>
+            </div>
+            <div class="quiz-body" id="quizBody">
+              <div class="quiz-question" id="quizQuestion"></div>
+              <div class="quiz-options" id="quizOptions"></div>
+            </div>
+            <div class="game-overlay" id="quizOverlay">
+              <div class="overlay-content">
+                <p class="game-title-text" id="quizOverlayTitle">TECH QUIZ</p>
+                <p class="game-sub-text" id="quizOverlaySubtitle">TEST YOUR KNOWLEDGE!</p>
+                <button class="btn btn-retro game-start-btn" id="quizStartBtn">
+                  <span class="btn-arrow">&#9654;</span> START
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="breakout-panel hidden" id="breakoutPanel">
+            <div class="breakout-panel-bar">
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-title">breakout.exe</span>
+              <button class="game-panel-close" id="breakoutPanelClose" aria-label="Close breakout">[X]</button>
+            </div>
+            <div class="breakout-panel-hud">
+              <div class="hud-item">
+                <span class="hud-label">SCORE</span>
+                <span class="hud-value" id="breakoutScore">0</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">LIVES</span>
+                <span class="hud-value" id="breakoutLives">3</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">LEVEL</span>
+                <span class="hud-value" id="breakoutLevel">1</span>
+              </div>
+            </div>
+            <div class="game-screen-inner">
+              <canvas id="breakoutCanvas" width="400" height="300"></canvas>
+              <div class="game-overlay" id="breakoutOverlay">
+                <div class="overlay-content">
+                  <p class="game-title-text" id="breakoutOverlayTitle">BREAKOUT</p>
+                  <p class="game-sub-text" id="breakoutOverlaySubtitle">BREAK ALL THE BRICKS!</p>
+                  <button class="btn btn-retro game-start-btn" id="breakoutStartBtn">
+                    <span class="btn-arrow">&#9654;</span> START
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="game-instructions">
+              <p>&#9654; ARROWS/MOUSE TO MOVE &bull; &#9654; BREAK BRICKS &bull; &#9654; ESC TO EXIT</p>
+            </div>
+          </div>
+          <div class="tetris-panel hidden" id="tetrisPanel">
+            <div class="tetris-panel-bar">
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-title">tetris.exe</span>
+              <button class="game-panel-close" id="tetrisPanelClose" aria-label="Close tetris">[X]</button>
+            </div>
+            <div class="tetris-panel-hud">
+              <div class="hud-item">
+                <span class="hud-label">SCORE</span>
+                <span class="hud-value" id="tetrisScore">0</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">LINES</span>
+                <span class="hud-value" id="tetrisLines">0</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">LEVEL</span>
+                <span class="hud-value" id="tetrisLevel">1</span>
+              </div>
+            </div>
+            <div class="game-screen-inner">
+              <canvas id="tetrisCanvas" width="400" height="300"></canvas>
+              <div class="game-overlay" id="tetrisOverlay">
+                <div class="overlay-content">
+                  <p class="game-title-text" id="tetrisOverlayTitle">TETRIS</p>
+                  <p class="game-sub-text" id="tetrisOverlaySubtitle">STACK THE BLOCKS!</p>
+                  <button class="btn btn-retro game-start-btn" id="tetrisStartBtn">
+                    <span class="btn-arrow">&#9654;</span> START
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="game-controls tetris-controls">
+              <button class="ctrl-btn" data-action="rotate" aria-label="Rotate">&#8635;</button>
+              <div class="ctrl-row">
+                <button class="ctrl-btn" data-dir="left" aria-label="Left">&#9664;</button>
+                <button class="ctrl-btn" data-dir="down" aria-label="Down">&#9660;</button>
+                <button class="ctrl-btn" data-dir="right" aria-label="Right">&#9654;</button>
+              </div>
+            </div>
+            <div class="game-instructions">
+              <p>&#9654; ARROWS TO MOVE/ROTATE &bull; &#9654; CLEAR LINES &bull; &#9654; ESC TO EXIT</p>
+            </div>
+          </div>
+          <div class="pong-panel hidden" id="pongPanel">
+            <div class="pong-panel-bar">
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-title">pong.exe</span>
+              <button class="game-panel-close" id="pongPanelClose" aria-label="Close pong">[X]</button>
+            </div>
+            <div class="pong-panel-hud">
+              <div class="hud-item">
+                <span class="hud-label">PLAYER</span>
+                <span class="hud-value" id="pongPlayerScore">0</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">CPU</span>
+                <span class="hud-value" id="pongCpuScore">0</span>
+              </div>
+            </div>
+            <div class="game-screen-inner">
+              <canvas id="pongCanvas" width="400" height="300"></canvas>
+              <div class="game-overlay" id="pongOverlay">
+                <div class="overlay-content">
+                  <p class="game-title-text" id="pongOverlayTitle">PONG</p>
+                  <p class="game-sub-text" id="pongOverlaySubtitle">BEAT THE CPU!</p>
+                  <button class="btn btn-retro game-start-btn" id="pongStartBtn">
+                    <span class="btn-arrow">&#9654;</span> START
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="game-instructions">
+              <p>&#9654; UP/DOWN ARROWS OR MOUSE &bull; &#9654; FIRST TO 5 WINS &bull; &#9654; ESC TO EXIT</p>
+            </div>
+          </div>
+          <div class="whack-panel hidden" id="whackPanel">
+            <div class="whack-panel-bar">
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-title">whack.exe</span>
+              <span class="whack-timer" id="whackTimer">30s</span>
+              <button class="game-panel-close" id="whackPanelClose" aria-label="Close whack">[X]</button>
+            </div>
+            <div class="whack-panel-hud">
+              <div class="hud-item">
+                <span class="hud-label">SCORE</span>
+                <span class="hud-value" id="whackScore">0</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">HIT</span>
+                <span class="hud-value" id="whackHit">0</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">BEST</span>
+                <span class="hud-value" id="whackBest">0</span>
+              </div>
+            </div>
+            <div class="whack-grid" id="whackGrid"></div>
+            <div class="game-overlay" id="whackOverlay">
+              <div class="overlay-content">
+                <p class="game-title-text" id="whackOverlayTitle">WHACK-A-BUG</p>
+                <p class="game-sub-text" id="whackOverlaySubtitle">CLICK THE BUGS!</p>
+                <button class="btn btn-retro game-start-btn" id="whackStartBtn">
+                  <span class="btn-arrow">&#9654;</span> START
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="minesweeper-panel hidden" id="minesweeperPanel">
+            <div class="minesweeper-panel-bar">
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-title">minesweeper.exe</span>
+              <button class="game-panel-close" id="minesweeperPanelClose" aria-label="Close minesweeper">[X]</button>
+            </div>
+            <div class="minesweeper-panel-hud">
+              <div class="hud-item">
+                <span class="hud-label">MINES</span>
+                <span class="hud-value" id="mineCount">10</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">TIME</span>
+                <span class="hud-value" id="mineTime">0:00</span>
+              </div>
+            </div>
+            <div class="minesweeper-grid" id="minesweeperGrid"></div>
+            <div class="game-overlay" id="minesweeperOverlay">
+              <div class="overlay-content">
+                <p class="game-title-text" id="minesweeperOverlayTitle">MINESWEEPER</p>
+                <p class="game-sub-text" id="minesweeperOverlaySubtitle">FLAG THE MINES!</p>
+                <button class="btn btn-retro game-start-btn" id="minesweeperStartBtn">
+                  <span class="btn-arrow">&#9654;</span> START
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="2048-panel hidden" id="game2048Panel">
+            <div class="2048-panel-bar">
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-title">2048.exe</span>
+              <button class="game-panel-close" id="game2048PanelClose" aria-label="Close 2048">[X]</button>
+            </div>
+            <div class="2048-panel-hud">
+              <div class="hud-item">
+                <span class="hud-label">SCORE</span>
+                <span class="hud-value" id="score2048">0</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">BEST</span>
+                <span class="hud-value" id="best2048">0</span>
+              </div>
+            </div>
+            <div class="game2048-grid" id="grid2048"></div>
+            <div class="game-overlay" id="game2048Overlay">
+              <div class="overlay-content">
+                <p class="game-title-text" id="game2048OverlayTitle">2048</p>
+                <p class="game-sub-text" id="game2048OverlaySubtitle">MERGE TO 2048!</p>
+                <button class="btn btn-retro game-start-btn" id="game2048StartBtn">
+                  <span class="btn-arrow">&#9654;</span> START
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="simon-panel hidden" id="simonPanel">
+            <div class="simon-panel-bar">
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-title">simon.exe</span>
+              <button class="game-panel-close" id="simonPanelClose" aria-label="Close simon">[X]</button>
+            </div>
+            <div class="simon-panel-hud">
+              <div class="hud-item">
+                <span class="hud-label">ROUND</span>
+                <span class="hud-value" id="simonRound">1</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">BEST</span>
+                <span class="hud-value" id="simonBest">0</span>
+              </div>
+            </div>
+            <div class="simon-grid" id="simonGrid"></div>
+            <div class="game-overlay" id="simonOverlay">
+              <div class="overlay-content">
+                <p class="game-title-text" id="simonOverlayTitle">SIMON</p>
+                <p class="game-sub-text" id="simonOverlaySubtitle">REMEMBER THE PATTERN!</p>
+                <button class="btn btn-retro game-start-btn" id="simonStartBtn">
+                  <span class="btn-arrow">&#9654;</span> START
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="reaction-panel hidden" id="reactionPanel">
+            <div class="reaction-panel-bar">
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-title">reaction.exe</span>
+              <button class="game-panel-close" id="reactionPanelClose" aria-label="Close reaction">[X]</button>
+            </div>
+            <div class="reaction-body" id="reactionBody">
+              <div class="reaction-area" id="reactionArea">
+                <div class="reaction-message" id="reactionMessage">CLICK START!</div>
+              </div>
+            </div>
+            <div class="reaction-hud">
+              <div class="hud-item">
+                <span class="hud-label">LAST</span>
+                <span class="hud-value" id="reactionLast">--</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">BEST</span>
+                <span class="hud-value" id="reactionBest">--</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">AVG</span>
+                <span class="hud-value" id="reactionAvg">--</span>
+              </div>
+            </div>
+            <div class="game-overlay" id="reactionOverlay">
+              <div class="overlay-content">
+                <p class="game-title-text" id="reactionOverlayTitle">REACTION TEST</p>
+                <p class="game-sub-text" id="reactionOverlaySubtitle">TEST YOUR REFLEXES!</p>
+                <button class="btn btn-retro game-start-btn" id="reactionStartBtn">
+                  <span class="btn-arrow">&#9654;</span> START
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="shooter-panel hidden" id="shooterPanel">
+            <div class="shooter-panel-bar">
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-title">shooter.exe</span>
+              <span class="shooter-timer" id="shooterTimer">30s</span>
+              <button class="game-panel-close" id="shooterPanelClose" aria-label="Close shooter">[X]</button>
+            </div>
+            <div class="shooter-panel-hud">
+              <div class="hud-item">
+                <span class="hud-label">SCORE</span>
+                <span class="hud-value" id="shooterScore">0</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">ACCURACY</span>
+                <span class="hud-value" id="shooterAccuracy">100%</span>
+              </div>
+            </div>
+            <div class="shooter-area" id="shooterArea"></div>
+            <div class="game-overlay" id="shooterOverlay">
+              <div class="overlay-content">
+                <p class="game-title-text" id="shooterOverlayTitle">TARGET SHOOTER</p>
+                <p class="game-sub-text" id="shooterOverlaySubtitle">SHOOT THE TARGETS!</p>
+                <button class="btn btn-retro game-start-btn" id="shooterStartBtn">
+                  <span class="btn-arrow">&#9654;</span> START
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="math-panel hidden" id="mathPanel">
+            <div class="math-panel-bar">
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-dot"></span>
+              <span class="terminal-title">math.exe</span>
+              <span class="math-timer" id="mathTimer">60s</span>
+              <button class="game-panel-close" id="mathPanelClose" aria-label="Close math">[X]</button>
+            </div>
+            <div class="math-panel-hud">
+              <div class="hud-item">
+                <span class="hud-label">SCORE</span>
+                <span class="hud-value" id="mathScore">0</span>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">STREAK</span>
+                <span class="hud-value" id="mathStreak">0</span>
+              </div>
+            </div>
+            <div class="math-body">
+              <div class="math-question" id="mathQuestion"></div>
+              <div class="math-input-row">
+                <span class="prompt">&gt;</span>
+                <input type="text" class="terminal-input" id="mathInput" autocomplete="off" spellcheck="false" disabled>
+              </div>
+            </div>
+            <div class="game-overlay" id="mathOverlay">
+              <div class="overlay-content">
+                <p class="game-title-text" id="mathOverlayTitle">MATH SPRINT</p>
+                <p class="game-sub-text" id="mathOverlaySubtitle">SOLVE FAST!</p>
+                <button class="btn btn-retro game-start-btn" id="mathStartBtn">
+                  <span class="btn-arrow">&#9654;</span> START
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -192,8 +632,50 @@
   </footer>
 
   <div class="achievement-popup" id="achievementPopup">
+    <canvas class="confetti-canvas" id="confettiCanvas"></canvas>
     <span class="achievement-icon">&#9733;</span>
     <span class="achievement-text" id="achievementText"></span>
+  </div>
+
+  <div class="treasure-map-overlay hidden" id="treasureMapOverlay">
+    <div class="treasure-map-panel">
+      <div class="treasure-map-bar">
+        <span class="terminal-dot"></span>
+        <span class="terminal-dot"></span>
+        <span class="terminal-dot"></span>
+        <span class="terminal-title">treasure_map.exe</span>
+        <button class="game-panel-close" id="treasureMapClose" aria-label="Close treasure map">[X]</button>
+      </div>
+      <div class="treasure-map-body">
+        <h3 class="treasure-map-title">&#128726; TREASURE MAP</h3>
+        <p class="treasure-map-subtitle">Find all secrets to unlock games!</p>
+        <div class="treasure-grid" id="treasureGrid"></div>
+        <div class="treasure-hints" id="treasureHints"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="treasure-sparkles" id="treasureSparkles"></div>
+
+  <div class="scoreboard-overlay hidden" id="scoreboardOverlay">
+    <div class="scoreboard-panel">
+      <div class="scoreboard-bar">
+        <span class="terminal-dot"></span>
+        <span class="terminal-dot"></span>
+        <span class="terminal-dot"></span>
+        <span class="terminal-title">highscores.dat</span>
+        <button class="game-panel-close" id="scoreboardClose" aria-label="Close scoreboard">[X]</button>
+      </div>
+      <div class="scoreboard-body">
+        <h3 class="scoreboard-title">&#127942; HIGH SCORES</h3>
+        <div class="scoreboard-tabs">
+          <button class="scoreboard-tab active" data-tab="games">Games</button>
+          <button class="scoreboard-tab" data-tab="stats">Statistics</button>
+          <button class="scoreboard-tab" data-tab="achievements">Achievements</button>
+        </div>
+        <div class="scoreboard-content" id="scoreboardContent"></div>
+      </div>
+    </div>
   </div>
 
   <script src="js/main.js"></script>
