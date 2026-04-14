@@ -3506,6 +3506,11 @@
       addTermLine('  <span class="cmd-hint">scan</span>      - Scan the profile');
       addTermLine('  <span class="cmd-hint">matrix</span>    - Toggle matrix rain');
       addTermLine('  <span class="cmd-hint">status</span>    - Exploration progress');
+      addTermLine('  <span class="cmd-hint">joke</span>     - Random tech joke 😂');
+      addTermLine('  <span class="cmd-hint">fortune</span>   - Get your fortune 🔮');
+      addTermLine('  <span class="cmd-hint">quote</span>    - Programming quote 📜');
+      addTermLine('  <span class="cmd-hint">ping</span>     - Check connection 🏓');
+      addTermLine('  <span class="cmd-hint">cowsay</span>    - ASCII cow 🐮');
       addTermLine('  <span class="cmd-hint">clear</span>     - Clear screen');
       addTermLine('  <span class="cmd-hint">exit</span>      - Return to top');
       addTermLine('', 'info');
@@ -3801,6 +3806,183 @@
     },
     helpme: function () {
       addTermLine('Did you mean <span class="cmd-hint">help</span>?', 'info');
+    },
+    joke: function () {
+      var jokes = [
+        { q: 'Why do programmers prefer dark mode?', a: 'Because light attracts bugs.' },
+        { q: 'What do you call a fake noodle?', a: 'An impasta! (imPOSTA)' },
+        { q: 'Why was the JavaScript developer broke?', a: 'Because he didn\'t get any typeof: NaN knew his typeof was Noetherian.' },
+        { q: 'How many programmers does it take to change a light bulb?', a: 'None, that\'s a hardware problem!' },
+        { q: 'Why do Python programmers wear glasses?', a: 'Because they can\'t C#!' },
+        { q: 'What do CSS and Docker have in common?', a: 'They both wrap content!' },
+        { q: 'Why was the function so stressed?', a: 'Because it had too many arguments!' },
+        { q: 'What did the infinite loop say?', a: 'While (true) { I will never stop }' },
+        { q: 'Why do Java devs wear glasses?', a: 'Because they can\'t C# (sea sharp)!' },
+        { q: 'What do you call 8 hobbits?', a: 'A hobbyte (hobbyte)!' },
+        { q: 'Why was the React developer so calm?', a: 'Because nothing could phase them - they\'d just re-render!' },
+        { q: 'What do you call a sleeping programmer?', a: 'A function (wakes up later)!' },
+        { q: 'Why do git developers always have clean desks?', a: 'They commit to it!' },
+        { q: 'What did the async say to the await?', a: 'I\'ll be right back!' },
+        { q: 'Why don\'t we tell jokes to null?', a: 'Because undefined has no sense of humor!' }
+      ];
+      var r = Math.floor(Math.random() * jokes.length);
+      addTermLine('🤖 JOKE #' + (r + 1) + ':', 'system');
+      addTermLine('');
+      addTermLine('  ' + jokes[r].q, '');
+      addTermLine('');
+      setTimeout(function() {
+        addTermLine('  ' + jokes[r].a, 'success');
+      }, 500);
+    },
+    fortune: function () {
+      var fortunes = [
+        'Your code will compile on the first try. Today is your lucky day!',
+        'A merge conflict in your future, but nothing a cup of coffee can\'t fix.',
+        'Your next commit will be clean. Make it count!',
+        'Someone somewhere will star your repo today.',
+        'Your PR review will have zero nitpicks. Believe in yourself!',
+        'The bug you\'re fixing is already fixed in v5.0.',
+        'Your lint rules are about to become your best friend.',
+        'Semantic versioning: may your semver ever increase!',
+        'Your keyboard\'s backspace key is about to get a workout.',
+        'Stack Overflow has the answer. You just haven\'t found it yet.',
+        'TypeScript will save your day. Trust the type!',
+        'Your CI pipeline is green. This is rare. Enjoy it!',
+        'The documentation is actually up to date. Prepare to be amazed.',
+        'Your production bug will be caught in staging.',
+        'Your terminal is about to be 42% more productive.'
+      ];
+      var r = Math.floor(Math.random() * fortunes.length);
+      addTermLine('🔮 FUTURE: ' + fortunes[r], 'success');
+    },
+    quote: function () {
+      var quotes = [
+        '"First, solve the problem. Then, write the code." – John Johnson',
+        '"Talk is cheap. Show me the code." – Linus Torvalds',
+        '"Any fool can write code that a computer can understand. Good programmers write code that humans can understand." – Martin Fowler',
+        '"Experience is the name everyone gives to their mistakes." – Oscar Wilde',
+        '"The best error message is the one that never shows up." – Unknown',
+        '"Code is like humor. When you have to explain it, it\'s bad." – Cory House',
+        '"Fix the cause, not the symptom." – Steve Maguire',
+        '"Make it work, make it right, make it fast." – Kent Beck',
+        '"It works on my machine." – Every developer ever',
+        '"In theory, theory and practice are the same. In practice, they\'re not." – Yogācāra Bhikṣu',
+        '"Programming isn\'t about what you know; it\'s about what you can figure out." – Chris Pine',
+        '"The most disastrous thing that you can ever learn is your first programming language." – Alan Kay',
+        '"Sometimes it pays to stay in bed on Monday, rather than spending the rest of the week debugging Monday\'s code." – Dan Salomon',
+        '"Optimism is an occupational hazard of programming: feedback is the work." – Andy Hunt',
+        '"If you want to go fast, go alone. If you want to go far, go together." – African proverb'
+      ];
+      var r = Math.floor(Math.random() * quotes.length);
+      addTermLine('📜 QUOTE:', 'system');
+      addTermLine('', '');
+      addTermLine(quotes[r], 'info');
+    },
+    cowsay: function (args) {
+      if (!args) {
+        addTermLine('Usage: cowsay <message>', 'info');
+        addTermLine('Example: cowsay Moo!', 'info');
+        return;
+      }
+      var len = Math.max(args.length, 20);
+      var border = '';
+      for (var i = 0; i < len + 2; i++) border += '_';
+      addTermLine(' ' + border, 'system');
+      addTermLine('<span class="cmd-hint">' + args + '</span>', '');
+      addTermLine(' ' + border, 'system');
+    },
+    uptime: function () {
+      var bootTime = new Date().getTime() - (discoveryOrder.length * 1000);
+      var uptimeSeconds = Math.floor((new Date().getTime() - bootTime) / 1000);
+      var hours = Math.floor(uptimeSeconds / 3600);
+      var mins = Math.floor((uptimeSeconds % 3600) / 60);
+      addTermLine('System uptime: ' + hours + 'h ' + mins + 'm (approximate)', 'system');
+      addTermLine('Exploration sessions: ' + discoveryOrder.length, 'info');
+    },
+    matrix: function () {
+      if (!discoveries['matrix']) {
+        addTermLine('You\'ve found the secret! Matrix rain unlocked.', 'success');
+        setTimeout(function() {
+          addTermLine('Type <span class="cmd-hint">matrix</span> to toggle the effect.', 'info');
+        }, 300);
+      }
+      if (matrixRunning) {
+        stopMatrix();
+      } else {
+        startMatrix();
+      }
+    },
+    starwars: function () {
+      addTermLine('Initializing telnet...', 'system');
+      addTermLine('Cannot connect to towel.ug.edu. Network unreachable.', 'error');
+      addTermLine('But if you can, try: telnet towel.ug.edu 2000', 'info');
+      addTermLine('(The real Star Wars ASCII movie)', 'info');
+    },
+    cat: function (args) {
+      if (!args) {
+        addTermLine('Usage: cat <file>', 'info');
+        return;
+      }
+      if (args === 'secret.zip' || args === 'secret') {
+        addTermLine('Unzipping...', 'system');
+        setTimeout(function() {
+          addTermLine('FILE NOT FOUND. Just kidding! 😜', 'success');
+          addTermLine('The real secret: you just wasted 2 seconds.', 'info');
+          discover('secret');
+        }, 800);
+      } else if (args === 'joke.txt') {
+        commands.joke();
+      } else if (args === 'fortune.txt') {
+        commands.fortune();
+      } else {
+        addTermLine('cat: ' + args + ': No such file or directory', 'error');
+        addTermLine('Try: about.txt, skills.dat, secret.zip, joke.txt, fortune.txt', 'info');
+      }
+    },
+    reboot: function () {
+      addTermLine('Rebooting system...', 'system');
+      addTermLine('Just kidding! Refreshing is bad for your health. 🤪', 'info');
+    },
+    ping: function () {
+      addTermLine('PONG! 🏓', 'success');
+      addTermLine('Latency: ' + (Math.random() * 50 + 10).toFixed(2) + 'ms', 'info');
+    },
+    curl: function (args) {
+      addTermLine('curl: try fetching something...', 'info');
+      addTermLine('This isn\'t a real terminal! 🐚', 'info');
+    },
+    ls: function () {
+      if (!discoveries['ls']) {
+        addTermLine('-rw-r--r--  1 irshad  staff   512 Jan 15 2026 about.txt', '');
+        addTermLine('-rw-r--r--  1 irshad  staff  1024 Jan 15 2026 skills.dat', '');
+        addTermLine('-rw-r--r--  1 irshad  staff   128 Jan 15 2026 secret.zip', '');
+        addTermLine('-rw-r--r--  1 irshad  staff   512 Jan 15 2026 joke.txt', '');
+        addTermLine('-rw-r--r--  1 irshad  staff   256 Jan 15 2026 fortune.txt', '');
+        discover('ls');
+      } else {
+        addTermLine('-rw-r--r--  1 irshad  staff   512 Jan 15 2026 about.txt', '');
+        addTermLine('-rw-r--r--  1 irshad  staff  1024 Jan 15 2026 skills.dat', '');
+        addTermLine('-rw-r--r--  1 irshad  staff   128 Jan 15 2026 secret.zip', '');
+        addTermLine('-rw-r--r--  1 irshad  staff   512 Jan 15 2026 joke.txt', '');
+        addTermLine('-rw-r--r--  1 irshad  staff   256 Jan 15 2026 fortune.txt', '');
+      }
+    },
+    status: function () {
+      addTermLine('EXPLORATION STATUS:', 'system');
+      addTermLine('', '');
+      addTermLine('  Discoveries: ' + discoveryOrder.length + ' / 40', 'info');
+      addTermLine('  Exploration: ' + Math.round((discoveryOrder.length / 40) * 100) + '%', 'info');
+      addTermLine('', '');
+      var recent = discoveryOrder.slice(-3);
+      if (recent.length > 0) {
+        addTermLine('  Recent:', '');
+        recent.forEach(function(d) {
+          addTermLine('    - ' + d, '');
+        });
+      }
+      addTermLine('', '');
+      addTermLine('  Games Unlocked: ' + Object.keys(discoveries).filter(function(k) { return k.endsWith('_unlock'); }).length, '');
+      discover('status');
     }
   };
 
