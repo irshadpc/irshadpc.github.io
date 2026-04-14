@@ -3785,25 +3785,10 @@
     },
     rm: function (args) {
       if (args && (args.indexOf('-rf') !== -1 || args.indexOf('-r') !== -1 || args.indexOf('-f') !== -1 || args === '-rf')) {
-        SoundManager.playError();
-        screenShake();
-        addTermLine('⚠️  DANGER: SYSTEM PROTECTION ACTIVE', 'error');
-        addTermLine('', '');
-        addTermLine('Nice try, script kiddie! 🛡️', 'error');
-        addTermLine('rm -rf blocked by:', 'info');
-        addTermLine('  > Common Sense™', 'info');
-        addTermLine('  > Cyberpunk Defense Shield™', 'info');
-        addTermLine('  > Not Today, Hacker™', 'info');
-        addTermLine('', '');
-        addTermLine('System integrity: 100% ✅', 'success');
-        addTermLine('Your files: Still there. Forever. 💾', 'info');
-        addTermLine('', '');
-        addTermLine('Try these safe commands instead:', 'system');
-        addTermLine('  <span class="cmd-hint">clear</span> - Clear terminal', 'info');
-        addTermLine('  <span class="cmd-hint">ls</span>   - List files safely', 'info');
-        addTermLine('  <span class="cmd-hint">help</span> - Show available commands', 'info');
-        discover('rm_blocked');
+        addCmdEcho(input);
+        triggerFakeCrash();
       } else {
+        addCmdEcho(input);
         addTermLine('Usage: rm [options] <file>', 'info');
         addTermLine('This is a portfolio site, not your actual computer! 🤖', 'info');
         addTermLine('You cannot delete anything here.', 'info');
@@ -3837,6 +3822,149 @@
       addTermLine('Command not found: ' + escapeHtml(cmd), 'error');
       addTermLine('Type <span class="cmd-hint">help</span> for available commands.', 'info');
     }
+  }
+
+  // ===== FAKE SYSTEM CRASH =====
+  function triggerFakeCrash() {
+    var crashStep = 0;
+
+    terminalInput.disabled = true;
+
+    var crashSequence = [
+      { delay: 500, action: function() {
+        addTermLine('Decoding request...', 'system');
+        SoundManager.playClick();
+      }},
+      { delay: 800, action: function() {
+        addTermLine('WARNING: Critical system operation detected', 'error');
+        SoundManager.playError();
+      }},
+      { delay: 1200, action: function() {
+        document.body.style.animation = 'glitch 0.3s ease 5';
+        SoundManager.playError();
+      }},
+      { delay: 1500, action: function() {
+        addTermLine('', '');
+        addTermLine('EXECUTING: rm -rf /', 'system');
+        addTermLine('▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'error');
+      }},
+      { delay: 2000, action: function() {
+        terminalBody.innerHTML = '';
+        terminalBody.style.background = 'rgba(255, 0, 0, 0.3)';
+        addTermLine('DELETING SYSTEM32...', 'error');
+        SoundManager.playError();
+        screenShake();
+      }},
+      { delay: 2300, action: function() {
+        addTermLine('DELETE: 90% complete', 'error');
+      }},
+      { delay: 2500, action: function() {
+        addTermLine('DELETE: kernel panic...', 'error');
+        document.body.style.animation = 'glitch 0.1s ease 10';
+      }},
+      { delay: 2700, action: function() {
+        addTermLine('ERROR: CORRUPTION DETECTED', 'error');
+        addTermLine('0x000000: CRITICAL FAILURE', 'error');
+      }},
+      { delay: 3000, action: function() {
+        addTermLine('💀 SYSTEM FATAL ERROR 💀', 'error');
+        addTermLine('', '');
+        addTermLine('紧急情况 | 严重错误 | 系统崩溃', 'error');
+        addTermLine('መ⊙᚜°⊙᚜ ERROR ⊙᚜°⊙ SYSTEM CORRUPTED', 'error');
+      }},
+      { delay: 3500, action: function() {
+        terminalBody.innerHTML = '';
+        terminalBody.style.background = 'rgba(0, 0, 0, 0.9)';
+        var crashMessages = [
+          '<span style="color:red;font-size:0.4rem;">&gt;&gt;&gt; BOOT SECTOR CORRUPTED</span>',
+          '<span style="color:#ff0000;font-size:0.5rem;">ERROR: 0xDEADBEEF</span>',
+          '<span style="color:#ff3131;font-size:0.4rem;"></span>',
+          '<span style="color:#ff6b6b6;font-size:0.4rem;">SYSTEM HALTED</span>',
+          '<span style="color:#ff0000;font-size:0.7rem;">💀 FATAL ERROR 💀</span>',
+          '<span style="color:#ff0000;font-size:0.5rem;"></span>',
+          '<span style="color:#ff8c00;font-size:0.4rem;">▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓</span>',
+          '<span style="color:#ff0000;font-size:0.6rem;">0x000000: KERNEL PANIC</span>',
+          '<span style="color:#ff3131;font-size:0.4rem;"></span>',
+          '<span style="color:#ff0000;font-size:0.4rem;"></span>',
+          '<span style="color:#ffffff;font-size:0.5rem;">SYSTEM32: NOT FOUND</span>',
+          '<span style="color:#ff0000;font-size:0.4rem;"></span>',
+          '<span style="color:#ff6666;font-size:0.4rem;">🔥 ALL YOUR BASE ARE BELONG TO US 🔥</span>'
+        ];
+        crashMessages.forEach(function(msg) {
+          var line = document.createElement('div');
+          line.className = 'term-line';
+          line.style.lineHeight = '1.5';
+          line.innerHTML = msg;
+          terminalBody.appendChild(line);
+        });
+        SoundManager.playError();
+      }},
+      { delay: 4000, action: function() {
+        document.body.style.animation = 'glitch 0.2s ease-in-out infinite';
+        terminalBody.style.background = 'rgba(255, 0, 0, 0.4)';
+        var scrambleLine = document.createElement('div');
+        scrambleLine.className = 'term-line';
+        scrambleLine.style.color = 'red';
+        scrambleLine.style.fontSize = '0.4rem';
+        terminalBody.appendChild(scrambleLine);
+
+        var scrambleText = ' scrambling filesystem... ';
+        var chars = '!@#$%^&*()_+-=[]{}|;:<>,.?/~`';
+        var i = 0;
+        var scrambleInterval = setInterval(function () {
+          scrambleLine.textContent += scrambleText[i % scrambleText.length];
+          i++;
+          if (i > 50) {
+            clearInterval(scrambleInterval);
+            setTimeout(revealPrank, 500);
+          }
+        }, 30);
+      }}
+    ];
+
+    var totalDelay = 0;
+    crashSequence.forEach(function (step) {
+      totalDelay += step.delay;
+      setTimeout(step.action, totalDelay);
+    });
+  }
+
+  function revealPrank() {
+    document.body.style.animation = '';
+
+    setTimeout(function () {
+      terminalBody.style.background = '';
+      terminalBody.innerHTML = '';
+
+      var revealMessages = [
+        { text: '', delay: 100 },
+        { text: '<span style="color:var(--yellow);font-size:0.6rem;">PSYCHE! 😜</span>', delay: 300 },
+        { text: '<span style="color:var(--cyan);font-size:0.5rem;">That was a joke! This is a portfolio site, remember?</span>', delay: 800 },
+        { text: '<span style="color:var(--green);font-size:0.5rem;">🛡️ System integrity: 100% intact</span>', delay: 1200 },
+        { text: '<span style="color:var(--magenta);font-size:0.5rem;">💾 Your files were never in danger</span>', delay: 1600 },
+        { text: '<span style="color:var(--text);font-size:0.4rem;">', delay: 2000 },
+        { text: '<span style="color:var(--cyan);font-size:0.5rem;">Nice try though! Type <span class="cmd-hint">help</span> for commands.</span>', delay: 2400 },
+        { text: '<span style="color:var(--yellow);font-size:0.4rem;">🎮 Ready to play games instead?</span>', delay: 2800 }
+      ];
+
+      var totalDelay = 0;
+      revealMessages.forEach(function (msg) {
+        totalDelay += msg.delay;
+        setTimeout(function () {
+          var line = document.createElement('div');
+          line.className = 'term-line';
+          line.innerHTML = msg.text;
+          terminalBody.appendChild(line);
+          terminalBody.scrollTop = terminalBody.scrollHeight;
+        }, totalDelay);
+      });
+
+      setTimeout(function () {
+        terminalInput.disabled = false;
+        terminalInput.focus();
+        SoundManager.playPowerUp();
+      }, 3500);
+    }, 500);
   }
 
   terminalInput.addEventListener('keydown', function (e) {
