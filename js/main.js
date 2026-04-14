@@ -3783,6 +3783,37 @@
     irshad: function () {
       addTermLine('Yes, that is the sysadmin. Full access not granted.', 'info');
     },
+    rm: function (args) {
+      if (args && (args.indexOf('-rf') !== -1 || args.indexOf('-r') !== -1 || args.indexOf('-f') !== -1 || args === '-rf')) {
+        SoundManager.playError();
+        screenShake();
+        addTermLine('⚠️  DANGER: SYSTEM PROTECTION ACTIVE', 'error');
+        addTermLine('', '');
+        addTermLine('Nice try, script kiddie! 🛡️', 'error');
+        addTermLine('rm -rf blocked by:', 'info');
+        addTermLine('  > Common Sense™', 'info');
+        addTermLine('  > Cyberpunk Defense Shield™', 'info');
+        addTermLine('  > Not Today, Hacker™', 'info');
+        addTermLine('', '');
+        addTermLine('System integrity: 100% ✅', 'success');
+        addTermLine('Your files: Still there. Forever. 💾', 'info');
+        addTermLine('', '');
+        addTermLine('Try these safe commands instead:', 'system');
+        addTermLine('  <span class="cmd-hint">clear</span> - Clear terminal', 'info');
+        addTermLine('  <span class="cmd-hint">ls</span>   - List files safely', 'info');
+        addTermLine('  <span class="cmd-hint">help</span> - Show available commands', 'info');
+        discover('rm_blocked');
+      } else {
+        addTermLine('Usage: rm [options] <file>', 'info');
+        addTermLine('This is a portfolio site, not your actual computer! 🤖', 'info');
+        addTermLine('You cannot delete anything here.', 'info');
+      }
+    },
+    rmdir: function () {
+      addTermLine('Nice try! 🤖', 'error');
+      addTermLine('This is a web terminal, you can\'t remove directories.', 'error');
+      addTermLine('But points for creativity! +1 XP', 'info');
+    },
     helpme: function () {
       addTermLine('Did you mean <span class="cmd-hint">help</span>?', 'info');
     }
