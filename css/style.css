@@ -502,6 +502,193 @@ a:hover {
   transform: translateY(-3px);
 }
 
+.crt-tear {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: var(--bg);
+  pointer-events: none;
+  will-change: clip-path;
+  animation: crtTearReveal 2.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.crt-tear-line {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  height: 4px;
+  z-index: 3;
+  background: linear-gradient(90deg, transparent 5%, var(--cyan) 25%, var(--magenta) 50%, var(--cyan) 75%, transparent 95%);
+  box-shadow:
+    0 0 15px rgba(0, 240, 255, 0.8),
+    0 0 40px rgba(255, 0, 255, 0.4),
+    0 0 80px rgba(0, 240, 255, 0.2);
+  filter: blur(0.5px);
+  animation: tearLineGlide 2.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  opacity: 0;
+}
+
+.crt-tear-noise {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+  opacity: 0;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  animation: tearNoiseFade 1.2s ease-out 0.3s forwards;
+}
+
+.crt-tear-glitch {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: linear-gradient(
+    0deg,
+    transparent 0%,
+    rgba(0, 240, 255, 0.03) 20%,
+    transparent 40%,
+    rgba(255, 0, 255, 0.02) 60%,
+    transparent 80%
+  );
+  background-size: 100% 60px;
+  opacity: 0;
+  animation: tearGlitchScan 0.8s linear 0.5s 3;
+}
+
+@keyframes crtTearReveal {
+  0% {
+    clip-path: polygon(-5% 0%, 105% 0%, 105% 100%, -5% 100%);
+  }
+  5% {
+    clip-path: polygon(-5% 0%, 105% 0%, 105% 92%, 98% 90%, 100% 85%, 96% 82%, 100% 78%, -5% 78%);
+  }
+  9% {
+    clip-path: polygon(-5% 0%, 105% 0%, 105% 78%, 97% 75%, 100% 70%, 95% 67%, 100% 62%, -5% 62%);
+  }
+  13% {
+    clip-path: polygon(-5% 0%, 105% 0%, 105% 62%, 98% 59%, 100% 54%, 96% 51%, 100% 46%, -5% 46%);
+  }
+  17% {
+    clip-path: polygon(-5% 0%, 105% 0%, 105% 46%, 97% 43%, 100% 38%, 95% 35%, 100% 30%, -5% 30%);
+  }
+  21% {
+    clip-path: polygon(-5% 0%, 105% 0%, 105% 30%, 98% 27%, 100% 22%, 96% 19%, 100% 14%, -5% 14%);
+  }
+  25% {
+    clip-path: polygon(-5% 0%, 105% 0%, 105% 14%, 97% 11%, 100% 6%, 95% 3%, 100% -2%, -5% -2%);
+  }
+  100% {
+    clip-path: polygon(-5% 0%, 105% 0%, 105% -5%, -5% -5%);
+  }
+}
+
+@keyframes tearLineGlide {
+  0% {
+    top: 100%;
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  5% {
+    top: 78%;
+    opacity: 1;
+  }
+  9% {
+    top: 62%;
+    opacity: 1;
+  }
+  13% {
+    top: 46%;
+    opacity: 1;
+  }
+  17% {
+    top: 30%;
+    opacity: 1;
+  }
+  21% {
+    top: 14%;
+    opacity: 1;
+  }
+  25% {
+    top: -2%;
+    opacity: 1;
+  }
+  30% {
+    top: -5%;
+    opacity: 0.6;
+  }
+  100% {
+    top: -5%;
+    opacity: 0;
+  }
+}
+
+@keyframes tearNoiseFade {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.08;
+  }
+  80% {
+    opacity: 0.04;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes tearGlitchScan {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  10% {
+    opacity: 0.6;
+  }
+  30% {
+    opacity: 0.3;
+    transform: translateY(20px);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateY(-10px);
+  }
+  70% {
+    opacity: 0.2;
+    transform: translateY(15px);
+  }
+  90% {
+    opacity: 0.4;
+    transform: translateY(-5px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+}
+
+@keyframes tearScanlineFlash {
+  0% {
+    opacity: 0.8;
+    background: rgba(255, 255, 255, 0.03);
+  }
+  20% {
+    opacity: 0.6;
+    background: rgba(0, 240, 255, 0.02);
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 .scroll-indicator {
   position: absolute;
   bottom: 1.5rem;

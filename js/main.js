@@ -529,6 +529,54 @@
 
   setTimeout(typeWriter, 1200);
 
+  // ===== CRT SCREEN TEAR JITTER =====
+  (function initCrtTear() {
+    var hero = document.getElementById('hero');
+    var heroFrame = hero.querySelector('.hero-frame');
+    var crtTear = document.getElementById('crtTear');
+    if (!heroFrame || !crtTear) return;
+
+    var tearDuration = 2800;
+    var jitterStart = 200;
+    var jitterEnd = 900;
+    var jitterInterval = null;
+
+    function doJitter() {
+      heroFrame.style.transition = 'transform 0.05s';
+      jitterInterval = setInterval(function () {
+        var elapsed = Date.now() - jitterStartTime;
+        if (elapsed > jitterEnd - jitterStart) {
+          clearInterval(jitterInterval);
+          heroFrame.style.transform = '';
+          heroFrame.style.transition = '';
+          return;
+        }
+        var intensity = Math.max(0, 1 - elapsed / (jitterEnd - jitterStart));
+        var offsetX = (Math.random() - 0.5) * 6 * intensity;
+        var offsetY = (Math.random() - 0.5) * 2 * intensity;
+        heroFrame.style.transform = 'translate(' + offsetX.toFixed(1) + 'px, ' + offsetY.toFixed(1) + 'px)';
+      }, 50);
+    }
+
+    var jitterStartTime = 0;
+    setTimeout(function () {
+      jitterStartTime = Date.now();
+      doJitter();
+    }, jitterStart);
+
+    setTimeout(function () {
+      heroFrame.style.transform = '';
+      heroFrame.style.transition = '';
+      heroFrame.style.opacity = '';
+      if (jitterInterval) clearInterval(jitterInterval);
+    }, jitterEnd + 200);
+
+    var scanlines = document.querySelector('.scanlines');
+    if (scanlines) {
+      scanlines.style.animation = 'tearScanlineFlash 2.8s ease-out forwards';
+    }
+  })();
+
   // ===== KONAMI CODE =====
   var konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
   var konamiIndex = 0;
