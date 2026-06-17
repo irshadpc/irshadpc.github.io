@@ -117,7 +117,7 @@
     { id: 'pong', icon: '&#127955;', name: 'Pong', hint: 'Unlock at 30 discoveries (VERY HARD) - type "pong"', area: 'terminal' },
     { id: 'whack', icon: '&#128028;', name: 'Whack-a-Bug', hint: 'Unlock at 33 discoveries (VERY HARD) - type "whack"', area: 'terminal' },
     { id: 'minesweeper', icon: '&#128163;', name: 'Minesweeper', hint: 'Unlock at 36 discoveries (EXTREME) - type "minesweeper"', area: 'terminal' },
-    { id: '2048', icon: '&#128318;', name: '2048', hint: 'Unlock at 38 discoveries (EXTREME) - type "2048"', area: 'terminal' },
+    { id: 'spin', icon: '&#127920;', name: 'Lucky Spin', hint: 'Unlock at 3 discoveries (EASY!) - type "spin"', area: 'terminal' },
     { id: 'simon', icon: '&#127911;', name: 'Simon Says', hint: 'Available after exploration starts', area: 'terminal' },
     { id: 'reaction', icon: '&#9889;', name: 'Reaction Test', hint: 'Available after exploration starts', area: 'terminal' },
     { id: 'shooter', icon: '&#128165;', name: 'Target Shooter', hint: 'Available after exploration starts', area: 'terminal' },
@@ -162,7 +162,7 @@
       if (treasure.id === 'pong' && !discoveries['pong_unlock']) locked = true;
       if (treasure.id === 'whack' && !discoveries['whack_unlock']) locked = true;
       if (treasure.id === 'minesweeper' && !discoveries['minesweeper_unlock']) locked = true;
-      if (treasure.id === '2048' && !discoveries['game2048_unlock']) locked = true;
+      if (treasure.id === 'spin' && !discoveries['spin_unlock']) locked = true;
 
       if (locked && !found) {
         item.classList.add('locked');
@@ -223,7 +223,7 @@
     if (count < 30) return { game: 'Pong (VERY HARD)', count: 30 };
     if (count < 33) return { game: 'Whack-a-Bug (VERY HARD)', count: 33 };
     if (count < 36) return { game: 'Minesweeper (EXTREME)', count: 36 };
-    if (count < 38) return { game: '2048 (EXTREME)', count: 38 };
+    if (count < 3) return { game: 'Lucky Spin (EASY!)', count: 3 };
     return null;
   }
 
@@ -705,11 +705,11 @@
       addTermLine('  *** NEW COMMAND UNLOCKED: <span class="cmd-hint">minesweeper</span> ***', 'unlock');
       showAchievement('MINESWEEPER UNLOCKED!');
     }
-    if (count >= 38 && !discoveries['game2048_unlock']) {
-      discoveries['game2048_unlock'] = true;
+    if (count >= 3 && !discoveries['spin_unlock']) {
+      discoveries['spin_unlock'] = true;
       addTermLine('', '');
-      addTermLine('  *** NEW COMMAND UNLOCKED: <span class="cmd-hint">2048</span> ***', 'unlock');
-      showAchievement('2048 GAME UNLOCKED!');
+      addTermLine('  *** NEW COMMAND UNLOCKED: <span class="cmd-hint">spin</span> ***', 'unlock');
+      showAchievement('LUCKY SPIN UNLOCKED!');
     }
     if (count >= MAX_DISCOVERIES && !discoveries['complete']) {
       discoveries['complete'] = true;
@@ -754,7 +754,7 @@
       { id: 'pong', name: 'Pong', icon: '&#127955;', scoreKey: 'pongBest' },
       { id: 'whack', name: 'Whack-a-Bug', icon: '&#128028;', scoreKey: 'whackBest' },
       { id: 'minesweeper', name: 'Minesweeper', icon: '&#128163;', scoreKey: 'minesweeperBest' },
-      { id: '2048', name: '2048', icon: '&#128318;', scoreKey: 'best2048' },
+      { id: 'spin', name: 'Lucky Spin', icon: '&#127920;', scoreKey: 'spinBest' },
       { id: 'simon', name: 'Simon', icon: '&#127911;', scoreKey: 'simonBest' },
       { id: 'reaction', name: 'Reaction', icon: '&#9889;', scoreKey: 'reactionBest' },
       { id: 'shooter', name: 'Shooter', icon: '&#128165;', scoreKey: 'shooterBest' },
@@ -773,7 +773,7 @@
       { id: 'pong_win', name: 'Pong Champion', desc: 'Beat the CPU in Pong', icon: '&#127955;', unlocked: false },
       { id: 'whack_200', name: 'Bug Hunter', desc: 'Score 200+ in Whack-a-Bug', icon: '&#128028;', unlocked: false },
       { id: 'minesweeper_complete', name: 'Deminer', desc: 'Complete Minesweeper', icon: '&#128163;', unlocked: false },
-      { id: '2048_win', name: 'Number Cruncher', desc: 'Reach 2048 tile', icon: '&#128318;', unlocked: false },
+      { id: 'spin_jackpot', name: 'Jackpot!', desc: 'Hit the jackpot in Lucky Spin', icon: '&#127920;', unlocked: false },
       { id: 'explorer_10', name: 'Explorer', desc: 'Discover 10 secrets', icon: '&#128726;', unlocked: false },
       { id: 'explorer_25', name: 'Pathfinder', desc: 'Discover 25 secrets', icon: '&#127919;', unlocked: false },
       { id: 'games_5', name: 'Gamer', desc: 'Play 5 different games', icon: '&#127918;', unlocked: false }
@@ -2824,195 +2824,142 @@
 
   minesweeperPanelClose.addEventListener('click', closeMinesweeperGame);
 
-  // ===== 2048 GAME =====
-  var game2048Panel = document.getElementById('game2048Panel');
-  var game2048PanelClose = document.getElementById('game2048PanelClose');
-  var grid2048 = document.getElementById('grid2048');
-  var game2048Overlay = document.getElementById('game2048Overlay');
-  var game2048StartBtn = document.getElementById('game2048StartBtn');
-  var score2048El = document.getElementById('score2048');
-  var best2048El = document.getElementById('best2048');
+  // ===== LUCKY SPIN GAME =====
+  var spinPanel = document.getElementById('spinPanel');
+  var spinPanelClose = document.getElementById('spinPanelClose');
+  var spinSlots = document.getElementById('spinSlots');
+  var spinSlot1 = document.getElementById('spinSlot1');
+  var spinSlot2 = document.getElementById('spinSlot2');
+  var spinSlot3 = document.getElementById('spinSlot3');
+  var spinResult = document.getElementById('spinResult');
+  var spinBtn = document.getElementById('spinBtn');
+  var spinOverlay = document.getElementById('spinOverlay');
+  var spinStartBtn = document.getElementById('spinStartBtn');
+  var spinScoreEl = document.getElementById('spinScore');
+  var spinBestEl = document.getElementById('spinBest');
 
-  var game2048Active = false;
-  var grid2048State = [];
-  var score2048 = 0;
-  var best2048 = parseInt(localStorage.getItem('best2048')) || 0;
+  var spinActive = false;
+  var spinScore = 0;
+  var spinBest = parseInt(localStorage.getItem('spinBest')) || 0;
+  var spinSpinning = false;
 
-  best2048El.textContent = best2048;
+  spinBestEl.textContent = spinBest;
 
-  function start2048Game() {
-    if (!discoveries['game2048_unlock']) {
+  var SPIN_SYMBOLS = ['&#127760;', '&#127775;', '&#127942;', '&#128176;', '&#127920;', '&#128142;'];
+
+  function startSpinGame() {
+    if (!discoveries['spin_unlock']) {
       addTermLine('ACCESS DENIED. Explore more to unlock.', 'error');
-      addTermLine('Discover ' + (23 - discoveryOrder.length) + ' more things.', 'info');
+      addTermLine('Discover ' + (3 - discoveryOrder.length) + ' more things.', 'info');
       return;
     }
-    game2048Active = true;
-    score2048 = 0;
-    score2048El.textContent = '0';
-    game2048Panel.classList.remove('hidden');
+    spinActive = true;
+    spinScore = 0;
+    spinScoreEl.textContent = '0';
+    spinPanel.classList.remove('hidden');
     mainTerminal.style.display = 'none';
-    game2048Overlay.classList.remove('hidden');
-    discover('game2048');
+    spinOverlay.classList.remove('hidden');
+    discover('spin');
   }
 
-  function init2048Game() {
-    game2048Active = true;
-    score2048 = 0;
-    grid2048State = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    score2048El.textContent = '0';
-    game2048Overlay.classList.add('hidden');
-
-    spawn2048Tile();
-    spawn2048Tile();
-    render2048();
+  function initSpinGame() {
+    spinActive = true;
+    spinScore = 0;
+    spinScoreEl.textContent = '0';
+    spinResult.textContent = 'PULL THE LEVER!';
+    spinResult.className = 'spin-result';
+    spinBtn.disabled = false;
+    spinSlots.querySelectorAll('.spin-slot').forEach(function (s) { s.classList.remove('spinning'); });
+    spinOverlay.classList.add('hidden');
   }
 
-  function spawn2048Tile() {
-    var empty = grid2048State.map(function (v, i) { return v === 0 ? i : -1; }).filter(function (i) { return i !== -1; });
-    if (empty.length === 0) return;
-    var idx = empty[Math.floor(Math.random() * empty.length)];
-    grid2048State[idx] = Math.random() < 0.9 ? 2 : 4;
-  }
+  function doSpin() {
+    if (spinSpinning || !spinActive) return;
+    spinSpinning = true;
+    spinBtn.disabled = true;
+    spinResult.textContent = 'SPINNING...';
+    spinResult.className = 'spin-result';
+    spinSlots.querySelectorAll('.spin-slot').forEach(function (s) { s.classList.add('spinning'); });
+    SoundManager.playClick();
 
-  function render2048() {
-    grid2048.innerHTML = '';
-    grid2048State.forEach(function (val) {
-      var tile = document.createElement('div');
-      tile.className = 'tile2048';
-      if (val > 0) {
-        tile.textContent = val;
-        tile.dataset.val = val;
-      }
-      grid2048.appendChild(tile);
+    var symbols = [];
+    for (var i = 0; i < 3; i++) {
+      symbols.push(SPIN_SYMBOLS[Math.floor(Math.random() * SPIN_SYMBOLS.length)]);
+    }
+
+    var delay = 0;
+    [spinSlot1, spinSlot2, spinSlot3].forEach(function (slot, i) {
+      var count = 0;
+      var max = 5 + i * 3;
+      var interval = setInterval(function () {
+        slot.innerHTML = SPIN_SYMBOLS[Math.floor(Math.random() * SPIN_SYMBOLS.length)];
+        count++;
+        if (count >= max) {
+          clearInterval(interval);
+          slot.innerHTML = symbols[i];
+          slot.classList.remove('spinning');
+          if (i === 2) {
+            spinSlots.querySelectorAll('.spin-slot').forEach(function (s) { s.classList.remove('spinning'); });
+            evaluateSpin(symbols);
+          }
+        }
+      }, 80 + i * 20);
     });
   }
 
-  function slide2048(dir) {
-    if (!game2048Active) return;
+  function evaluateSpin(symbols) {
+    var won = 0;
+    var msg = '';
 
-    var moved = false;
-    var newGrid = grid2048State.slice();
-
-    for (var i = 0; i < 4; i++) {
-      var line = [];
-      for (var j = 0; j < 4; j++) {
-        var idx;
-        if (dir === 'left' || dir === 'right') {
-          idx = i * 4 + j;
-        } else {
-          idx = j * 4 + i;
-        }
-        if (newGrid[idx] !== 0) {
-          line.push(newGrid[idx]);
-        }
-      }
-
-      if (dir === 'right' || dir === 'down') {
-        line.reverse();
-      }
-
-      var merged = [];
-      for (var k = 0; k < line.length; k++) {
-        if (k < line.length - 1 && line[k] === line[k + 1]) {
-          merged.push(line[k] * 2);
-          score2048 += line[k] * 2;
-          k++;
-        } else {
-          merged.push(line[k]);
-        }
-      }
-
-      while (merged.length < 4) {
-        if (dir === 'right' || dir === 'down') {
-          merged.unshift(0);
-        } else {
-          merged.push(0);
-        }
-      }
-
-      if (dir === 'right' || dir === 'down') {
-        merged.reverse();
-      }
-
-      for (var j = 0; j < 4; j++) {
-        var idx;
-        if (dir === 'left' || dir === 'right') {
-          idx = i * 4 + j;
-        } else {
-          idx = j * 4 + i;
-        }
-        if (newGrid[idx] !== merged[j]) moved = true;
-        newGrid[idx] = merged[j];
-      }
+    if (symbols[0] === symbols[1] && symbols[1] === symbols[2]) {
+      won = 100;
+      msg = '&#127881; JACKPOT! +' + won + ' POINTS! &#127881;';
+      spinResult.className = 'spin-result jackpot';
+      SoundManager.playGameStart();
+      showAchievement('JACKPOT! Lucky Spin x3!');
+    } else if (symbols[0] === symbols[1] || symbols[1] === symbols[2] || symbols[0] === symbols[2]) {
+      won = 10;
+      msg = '&#128079; MATCH! +' + won + ' POINTS!';
+      spinResult.className = 'spin-result win';
+      SoundManager.playScore();
+    } else {
+      msg = '&#128532; NO MATCH. TRY AGAIN!';
+      spinResult.className = 'spin-result';
+      SoundManager.playGameOver();
     }
 
-    if (moved) {
-      grid2048State = newGrid;
-      spawn2048Tile();
-      render2048();
-      score2048El.textContent = score2048;
-      SoundManager.playClick();
+    spinScore += won;
+    spinScoreEl.textContent = spinScore;
 
-      if (score2048 > best2048) {
-        best2048 = score2048;
-        localStorage.setItem('best2048', best2048);
-        best2048El.textContent = best2048;
-      }
-
-      if (grid2048State.indexOf(0) === -1 && !canMerge2048()) {
-        SoundManager.playGameOver();
-        addTermLine('2048 GAME OVER! Score: ' + score2048, 'system');
-      }
-
-      if (grid2048State.indexOf(2048) !== -1) {
-        showAchievement('2048 ACHIEVED!');
-      }
+    if (won > 0 && spinScore > spinBest) {
+      spinBest = spinScore;
+      localStorage.setItem('spinBest', spinBest);
+      spinBestEl.textContent = spinBest;
     }
+
+    spinResult.innerHTML = msg;
+    spinSpinning = false;
+    spinBtn.disabled = false;
   }
 
-  function canMerge2048() {
-    for (var i = 0; i < 16; i++) {
-      if (i % 4 !== 3 && grid2048State[i] === grid2048State[i + 1]) return true;
-      if (i < 12 && grid2048State[i] === grid2048State[i + 4]) return true;
-    }
-    return false;
-  }
-
-  function close2048Game() {
-    game2048Active = false;
-    game2048Panel.classList.add('hidden');
+  function closeSpinGame() {
+    spinActive = false;
+    spinSpinning = false;
+    spinPanel.classList.add('hidden');
     mainTerminal.style.display = '';
     terminalInput.focus();
   }
 
-  game2048StartBtn.addEventListener('click', function () {
+  spinStartBtn.addEventListener('click', function () {
     SoundManager.playGameStart();
-    init2048Game();
+    initSpinGame();
   });
 
-  game2048PanelClose.addEventListener('click', close2048Game);
-
-  document.addEventListener('keydown', function (e) {
-    if (!game2048Active) return;
-    switch (e.key) {
-      case 'ArrowLeft':
-        e.preventDefault();
-        slide2048('left');
-        break;
-      case 'ArrowRight':
-        e.preventDefault();
-        slide2048('right');
-        break;
-      case 'ArrowUp':
-        e.preventDefault();
-        slide2048('up');
-        break;
-      case 'ArrowDown':
-        e.preventDefault();
-        slide2048('down');
-        break;
-    }
+  spinBtn.addEventListener('click', function () {
+    doSpin();
   });
+
+  spinPanelClose.addEventListener('click', closeSpinGame);
 
   // ===== SIMON GAME =====
   var simonPanel = document.getElementById('simonPanel');
@@ -3613,10 +3560,10 @@
       } else {
         addTermLine('  <span class="cmd-hint">minesweeper</span> - ??? (36+ discoveries) - EXTREME', 'info');
       }
-      if (discoveries['game2048_unlock']) {
-        addTermLine('  <span class="cmd-hint">2048</span>       - Merge tiles [UNLOCKED]', 'success');
+      if (discoveries['spin_unlock']) {
+        addTermLine('  <span class="cmd-hint">spin</span>       - Lucky Spin [UNLOCKED]', 'success');
       } else {
-        addTermLine('  <span class="cmd-hint">2048</span>       - ??? (38+ discoveries) - EXTREME', 'info');
+        addTermLine('  <span class="cmd-hint">spin</span>       - ??? (3+ discoveries) - EASY!', 'info');
       }
       discover('help');
     },
@@ -3723,8 +3670,8 @@
     minesweeper: function () {
       startMinesweeperGame();
     },
-    2048: function () {
-      start2048Game();
+    spin: function () {
+      startSpinGame();
     },
     simon: function () {
       startSimonGame();
@@ -3777,8 +3724,8 @@
       if (!discoveries['minesweeper_unlock']) {
         addTermLine('  Minesweeper unlocks at 36 discoveries (90%) - EXTREME', 'info');
       }
-      if (!discoveries['game2048_unlock']) {
-        addTermLine('  2048 unlocks at 38 discoveries (95%) - EXTREME', 'info');
+      if (!discoveries['spin_unlock']) {
+        addTermLine('  Spin unlocks at 3 discoveries (7.5%) - EASY!', 'info');
       }
       discover('status');
     },
@@ -4200,7 +4147,7 @@
   terminalInput.addEventListener('keydown', function (e) {
     if (snakeGameActive || hackActive || typeActive || memoryActive || quizActive ||
         breakoutActive || tetrisActive || pongActive || whackActive ||
-        minesweeperActive || game2048Active || simonActive || reactionActive ||
+        minesweeperActive || spinActive || simonActive || reactionActive ||
         shooterActive || mathActive) return;
 
     if (e.key === 'Enter') {
@@ -4228,7 +4175,7 @@
   mainTerminal.addEventListener('click', function () {
     if (!snakeGameActive && !hackActive && !typeActive && !memoryActive && !quizActive &&
         !breakoutActive && !tetrisActive && !pongActive && !whackActive &&
-        !minesweeperActive && !game2048Active && !simonActive && !reactionActive &&
+        !minesweeperActive && !spinActive && !simonActive && !reactionActive &&
         !shooterActive && !mathActive && bootComplete) {
       terminalInput.focus();
     }
@@ -4514,8 +4461,8 @@
         closeMinesweeperGame();
         return;
       }
-      if (game2048Active) {
-        close2048Game();
+      if (spinActive) {
+        closeSpinGame();
         return;
       }
       if (simonActive) {

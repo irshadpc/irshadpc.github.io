@@ -460,30 +460,40 @@
               </div>
             </div>
           </div>
-          <div class="2048-panel hidden" id="game2048Panel">
-            <div class="2048-panel-bar">
+          <div class="spin-panel hidden" id="spinPanel">
+            <div class="spin-panel-bar">
               <span class="terminal-dot"></span>
               <span class="terminal-dot"></span>
               <span class="terminal-dot"></span>
-              <span class="terminal-title">2048.exe</span>
-              <button class="game-panel-close" id="game2048PanelClose" aria-label="Close 2048">[X]</button>
+              <span class="terminal-title">spin.exe</span>
+              <button class="game-panel-close" id="spinPanelClose" aria-label="Close spin">[X]</button>
             </div>
-            <div class="2048-panel-hud">
+            <div class="spin-panel-hud">
               <div class="hud-item">
                 <span class="hud-label">SCORE</span>
-                <span class="hud-value" id="score2048">0</span>
+                <span class="hud-value" id="spinScore">0</span>
               </div>
               <div class="hud-item">
                 <span class="hud-label">BEST</span>
-                <span class="hud-value" id="best2048">0</span>
+                <span class="hud-value" id="spinBest">0</span>
               </div>
             </div>
-            <div class="game2048-grid" id="grid2048"></div>
-            <div class="game-overlay" id="game2048Overlay">
+            <div class="spin-body">
+              <div class="spin-slots" id="spinSlots">
+                <div class="spin-slot" id="spinSlot1">&#127760;</div>
+                <div class="spin-slot" id="spinSlot2">&#127760;</div>
+                <div class="spin-slot" id="spinSlot3">&#127760;</div>
+              </div>
+              <div class="spin-result" id="spinResult">PULL THE LEVER!</div>
+              <button class="btn btn-retro spin-btn" id="spinBtn">
+                <span class="btn-arrow">&#9654;</span> PULL LEVER
+              </button>
+            </div>
+            <div class="game-overlay" id="spinOverlay">
               <div class="overlay-content">
-                <p class="game-title-text" id="game2048OverlayTitle">2048</p>
-                <p class="game-sub-text" id="game2048OverlaySubtitle">MERGE TO 2048!</p>
-                <button class="btn btn-retro game-start-btn" id="game2048StartBtn">
+                <p class="game-title-text" id="spinOverlayTitle">LUCKY SPIN</p>
+                <p class="game-sub-text" id="spinOverlaySubtitle">MATCH 3 TO WIN BIG!</p>
+                <button class="btn btn-retro game-start-btn" id="spinStartBtn">
                   <span class="btn-arrow">&#9654;</span> START
                 </button>
               </div>
